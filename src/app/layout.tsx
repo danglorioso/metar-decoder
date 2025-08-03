@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Header";
-// import Footer from "./components/Footer";
+import Footer from "./components/Footer";
 import { Analytics } from "@vercel/analytics/next"
 
 const geistSans = Geist({
@@ -33,14 +33,19 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-gray-900 antialiased`}
       >
-        {children}
-
         {/* Header */}
         <div className="flex-shrink-0">
           <Header />
         </div>
 
+        {/* Main Content */}
+        <main className="flex-grow">{children}</main>
 
+        {/* Footer */}
+        <div className="flex-shrink-0">
+          <Footer />
+        </div>
+      
         {/* Analytics */}
         <Analytics />
       </body>
