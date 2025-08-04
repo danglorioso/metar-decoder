@@ -3,14 +3,14 @@ import React from 'react'
 
 export default function Footer() {
   return (
-    <footer className="text-gray-400 text-center p-4 w-full bg-neutral-900 border-t border-neutral-800">
+    <footer className="text-neutral-400 text-center p-4 w-full bg-gray-950 border-t border-neutral-800">
       <p className="mb-2 leading-tight">
         Website created by{" "}
         <a
           href="https://danglorioso.com"
           target="_blank" // Open in new tab
           rel="noopener noreferrer"
-          className="text-red-500 hover:text-red-700 transition-colors duration-300"
+          className="text-blue-500 hover:text-blue-700 transition-colors duration-300"
         >
           Dan Glorioso
         </a>

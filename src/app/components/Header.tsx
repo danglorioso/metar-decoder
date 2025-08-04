@@ -13,7 +13,7 @@ export default function Header() {
                         METAR Decoder
                     </h1>
                 </div>
-                <p className="text-gray-400 text-lg">Decode aviation weather reports with interactive hover translations</p>
+                <p className="text-gray-400 text-lg">Decode aviation weather reports with interactive hover translations.</p>
                 </div>
             </div>
         </div>
