@@ -6,7 +6,11 @@ module.exports = {
     "./src/components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        'aero-chart': "url('/aero-chart.png')",
+      }
+    },
   },
   plugins: [],
 }
