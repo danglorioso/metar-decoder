@@ -5,7 +5,7 @@ export default function Footer() {
   return (
     <footer className="text-neutral-400 text-center p-4 w-full bg-gray-950 border-t border-neutral-800">
       <p className="mb-2 leading-tight">
-        Website created by{" "}
+        © {new Date().getFullYear()} {" "}
         <a
           href="https://danglorioso.com"
           target="_blank" // Open in new tab
@@ -17,7 +17,7 @@ export default function Footer() {
         .
       </p>
       <p className="text-sm text-neutral-500 leading-tight">
-        Copyright © {new Date().getFullYear()}. All rights reserved.
+        This website is not intended for operational use and should not be relied upon for flight planning or aviation decision-making.
       </p>
     </footer>
   );
