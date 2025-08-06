@@ -1,4 +1,4 @@
-"use client" // Contains API call
+"use client"
 
 import { useState } from 'react';
 import { Search, Copy, RefreshCw } from 'lucide-react';

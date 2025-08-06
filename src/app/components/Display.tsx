@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from 'react';
+import { MetarWord, getMetarPatterns } from './Word';
 import { Copy, Eye } from 'lucide-react';
 
 type DisplayProps = {
@@ -10,6 +11,7 @@ type DisplayProps = {
 export default function Display({ metarText }: DisplayProps) {
     // useStates
     const [showFullTranslation, setShowFullTranslation] = useState(false);
+    const metarPatterns = getMetarPatterns();
 
     function generateFullTranslation(): import("react").ReactNode {
         throw new Error("Function not implemented.");
@@ -18,10 +20,11 @@ export default function Display({ metarText }: DisplayProps) {
     return (
         <div className="max-w-6xl mx-auto px-6">
             <div className="max-w-6xl px-6 py-6 space-y-8 bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl">
+                {/* Header */}
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-2xl font-semibold text-white flex items-center gap-3">
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                    Live METAR Report
+                        <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                        Live METAR Report
                     </h2>
                     <div className="flex gap-3">
                     <button
@@ -40,20 +43,28 @@ export default function Display({ metarText }: DisplayProps) {
                     </div>
                 </div>
 
+                {/* METAR Display */}
                 <div className="bg-gray-900/50 border border-gray-700 rounded-lg p-6 mb-6">
                     <div className="text-lg leading-relaxed flex flex-wrap items-center">
-                        <p>{metarText}</p>
-                    {/* {metarText.split(/\s+/).map((word, index) => (
-                        <MetarWord key={index} word={word} index={index} />
-                    ))} */}
+                    {metarText &&
+                        metarText.split(/\s+/).map((word, index) => (
+                        <MetarWord
+                            key={index}
+                            word={word}
+                            index={index}
+                            metarPatterns={metarPatterns}
+                        />
+                        ))}
                     </div>
                 </div>
 
+                {/* Tooltip legend */}
                 <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
                     <div className="w-4 h-4 bg-blue-500/20 border border-blue-500/30 rounded"></div>
                     <span>Hover over highlighted elements for detailed explanations</span>
                 </div>
 
+                {/* Optional Translation */}
                 {showFullTranslation && (
                     <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-6">
                     <h3 className="font-semibold text-blue-400 mb-3 flex items-center gap-2">
