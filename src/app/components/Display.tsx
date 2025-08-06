@@ -1,0 +1,71 @@
+"use client"
+
+import { useState } from 'react';
+import { Copy, Eye } from 'lucide-react';
+
+type DisplayProps = {
+  metarText: string;
+};
+
+export default function Display({ metarText }: DisplayProps) {
+    // useStates
+    const [showFullTranslation, setShowFullTranslation] = useState(false);
+
+    function generateFullTranslation(): import("react").ReactNode {
+        throw new Error("Function not implemented.");
+    }
+
+    return (
+        <div className="max-w-6xl mx-auto px-6">
+            <div className="max-w-6xl px-6 py-6 space-y-8 bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl">
+                <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-2xl font-semibold text-white flex items-center gap-3">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    Live METAR Report
+                    </h2>
+                    <div className="flex gap-3">
+                    <button
+                        onClick={() => navigator.clipboard.writeText(metarText)}
+                        className="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 border border-gray-600 rounded-lg transition-colors duration-200 flex items-center gap-2 text-gray-300"
+                    >
+                        <Copy className="w-4 h-4" />
+                        Copy
+                    </button>
+                    <button
+                        onClick={() => setShowFullTranslation(!showFullTranslation)}
+                        className="px-4 py-2 text-sm bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 text-blue-400 rounded-lg transition-colors duration-200"
+                    >
+                        {showFullTranslation ? 'Hide' : 'Show'} Translation
+                    </button>
+                    </div>
+                </div>
+
+                <div className="bg-gray-900/50 border border-gray-700 rounded-lg p-6 mb-6">
+                    <div className="text-lg leading-relaxed flex flex-wrap items-center">
+                        <p>{metarText}</p>
+                    {/* {metarText.split(/\s+/).map((word, index) => (
+                        <MetarWord key={index} word={word} index={index} />
+                    ))} */}
+                    </div>
+                </div>
+
+                <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
+                    <div className="w-4 h-4 bg-blue-500/20 border border-blue-500/30 rounded"></div>
+                    <span>Hover over highlighted elements for detailed explanations</span>
+                </div>
+
+                {showFullTranslation && (
+                    <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-6">
+                    <h3 className="font-semibold text-blue-400 mb-3 flex items-center gap-2">
+                        <Eye className="w-5 h-5" />
+                        Human-Readable Translation
+                    </h3>
+                    <p className="text-gray-300 leading-relaxed text-lg">
+                        {generateFullTranslation()}
+                    </p>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};

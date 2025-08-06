@@ -12,7 +12,7 @@ export default function MetarInput({ setMetarText }: InputProps) {
     const [customMode, setCustomMode] = useState(false);
     const [icao, setICAO] = useState('');
     const [loading, setLoading] = useState(false);
-    const [metarText] = ''
+    const metarText = '';
 
     async function fetchMetar() {
         try {
@@ -25,8 +25,8 @@ export default function MetarInput({ setMetarText }: InputProps) {
             }
 
             // Retrieve data and set METAR
-            const metar = await response.json();
-            setMetarText(metar);
+            const data = await response.json();
+            setMetarText(data[0].rawOb);
         } catch (error) {
             console.error('Error', error);
         }

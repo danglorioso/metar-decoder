@@ -4,10 +4,6 @@ import { useState } from 'react';
 import Input from './components/Input';
 import Display from './components/Display'
 
-type DisplayProps = {
-  metarText: string;
-};
-
 export default function Home() {
   const [metarText, setMetarText] = useState('');
   

@@ -21,9 +21,9 @@ export async function GET(req: Request) {
     }
 
     const data = await response.json();
-    const metar = data?.[0]?.rawOb || "No METAR found";
+    // const metar = data?.[0]?.rawOb || "No METAR found";
 
-    return new Response(JSON.stringify({ metar }), {
+    return new Response(JSON.stringify(data), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
