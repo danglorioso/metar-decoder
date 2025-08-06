@@ -3,17 +3,21 @@
 import { useState } from 'react';
 import { Search, Copy, RefreshCw } from 'lucide-react';
 
-export default function MetarInput() {
+type InputProps = {
+  setMetarText: (text: string) => void;
+};
+
+export default function MetarInput({ setMetarText }: InputProps) {
     // useStates
     const [customMode, setCustomMode] = useState(false);
-    const [airport, setAirport] = useState('');
+    const [icao, setICAO] = useState('');
     const [loading, setLoading] = useState(false);
-    const [metarText, setMetarText] = useState('');
+    const [metarText] = ''
 
     async function fetchMetar() {
         try {
             // Call API
-            const response = await fetch(`/api/fetchMetar?icao=${airport}`);
+            const response = await fetch(`/api/fetchMetar?icao=${icao}`);
             
             // Check response from API call
             if (!response.ok) {
@@ -21,9 +25,8 @@ export default function MetarInput() {
             }
 
             // Retrieve data and set METAR
-            const data = await response.json();
-            setMetarText(data.metar);
-
+            const metar = await response.json();
+            setMetarText(metar);
         } catch (error) {
             console.error('Error', error);
         }
@@ -77,8 +80,8 @@ export default function MetarInput() {
                         <div className="flex gap-3">
                         <input
                             type="text"
-                            value={airport}
-                            onChange={(e) => setAirport(e.target.value.toUpperCase())}
+                            value={icao}
+                            onChange={(e) => setICAO(e.target.value.toUpperCase())}
                             className="flex-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-gray-400"
                             placeholder="KBOS"
                             maxLength={4} // ICAO codes are 4 chars
