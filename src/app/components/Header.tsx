@@ -3,7 +3,7 @@ import { Plane } from 'lucide-react';
 export default function Header() {
     return (
         <div className="bg-gradient-to-r from-gray-900 via-blue-900/20 to-gray-900 border-b border-gray-800">
-            <div className="max-w-6xl mx-auto px-6 py-5">
+            <div className="max-w-6xl mx-auto px-6 py-4">
                 <div className="text-center">
                 <div className="flex items-center justify-center gap-3 mb-2">
                     <div className="p-2 bg-blue-500/20 rounded-lg border border-blue-500/30">
@@ -13,7 +13,7 @@ export default function Header() {
                         METAR Decoder
                     </h1>
                 </div>
-                <p className="text-gray-400 text-lg">Decode aviation weather reports with interactive hover translations.</p>
+                <p className="text-gray-400 text-md">Decode aviation weather reports with interactive hover translations.</p>
                 </div>
             </div>
         </div>

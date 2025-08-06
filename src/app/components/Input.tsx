@@ -4,19 +4,19 @@ import { useState } from 'react';
 import { Search, Copy, RefreshCw } from 'lucide-react';
 
 type InputProps = {
+    metarText: string;
   setMetarText: (text: string) => void;
 };
 
-export default function MetarInput({ setMetarText }: InputProps) {
-    // useStates
+export default function MetarInput({ metarText, setMetarText }: InputProps) {
     const [customMode, setCustomMode] = useState(false);
     const [icao, setICAO] = useState('');
     const [loading, setLoading] = useState(false);
-    const metarText = '';
 
     async function fetchMetar() {
+        setLoading(true);
+
         try {
-            // Call API
             const response = await fetch(`/api/fetchMetar?icao=${icao}`);
             
             // Check response from API call
@@ -30,6 +30,7 @@ export default function MetarInput({ setMetarText }: InputProps) {
         } catch (error) {
             console.error('Error', error);
         }
+        setLoading(false);
     }
 
     return (

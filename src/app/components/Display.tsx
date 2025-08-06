@@ -1,7 +1,8 @@
 "use client"
 
 import { useState } from 'react';
-import { MetarWord, getMetarPatterns } from './Word';
+import { MetarWord } from './Word';
+import { getMetarPatterns } from './Decode';
 import { Copy, Eye } from 'lucide-react';
 
 type DisplayProps = {
@@ -13,9 +14,35 @@ export default function Display({ metarText }: DisplayProps) {
     const [showFullTranslation, setShowFullTranslation] = useState(false);
     const metarPatterns = getMetarPatterns();
 
-    function generateFullTranslation(): import("react").ReactNode {
-        throw new Error("Function not implemented.");
-    }
+    const generateFullTranslation = () => {
+        const parts = metarText.split(/\s+/);
+        interface DecodedMetarPart {
+            explanation: string;
+        }
+
+        function decodeMetarPart(part: string): DecodedMetarPart | null {
+            for (let pattern of metarPatterns) {
+                const match = part.match(pattern.pattern);
+                if (match) {
+                    return {
+                        explanation: pattern.decode(match[0]),
+                    };
+                }
+            }
+            return null;
+        }
+
+        let translation: string[] = [];
+        
+        parts.forEach(part => {
+        const decoded = decodeMetarPart(part);
+        if (decoded) {
+            translation.push(decoded.explanation);
+        }
+        });
+        
+        return translation.join('. ') + '.';
+    };
 
     return (
         <div className="max-w-6xl mx-auto px-6">
@@ -44,7 +71,7 @@ export default function Display({ metarText }: DisplayProps) {
                 </div>
 
                 {/* METAR Display */}
-                <div className="bg-gray-900/50 border border-gray-700 rounded-lg p-6 mb-6">
+                <div className="bg-gray-900/50 border border-gray-700 rounded-lg p-4 mb-6">
                     <div className="text-lg leading-relaxed flex flex-wrap items-center">
                     {metarText &&
                         metarText.split(/\s+/).map((word, index) => (
