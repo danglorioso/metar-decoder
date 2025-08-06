@@ -26,7 +26,14 @@ export default function MetarInput({ metarText, setMetarText }: InputProps) {
 
             // Retrieve data and set METAR
             const data = await response.json();
-            setMetarText(data[0].rawOb);
+
+            // Check if data is valid and contains METAR
+            if (!Array.isArray(data) || data.length === 0 || !data[0].rawOb) {
+                console.error("No valid METAR found in data:", data);
+                setMetarText("No METAR found");
+            } else {
+                setMetarText(data[0].rawOb);
+            }
         } catch (error) {
             console.error('Error', error);
         }

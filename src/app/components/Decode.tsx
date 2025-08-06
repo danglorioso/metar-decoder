@@ -3,7 +3,7 @@ import { Plane, Wind, Eye, CloudSnow, Thermometer } from 'lucide-react';
 export const getMetarPatterns = () => {
   return [
     {
-      pattern: /^[A-Z]{4}/,
+      pattern: /^[A-Z]{4}$/,
       type: 'station',
       icon: Plane,
       color: 'text-blue-400',
