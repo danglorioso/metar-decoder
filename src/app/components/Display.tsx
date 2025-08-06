@@ -46,7 +46,7 @@ export default function Display({ metarText }: DisplayProps) {
 
     return (
         <div className="max-w-6xl mx-auto px-6">
-            <div className="max-w-6xl px-6 py-6 space-y-8 bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl">
+            <div className="max-w-6xl p-6 space-y-8 bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl">
                 {/* Header */}
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-2xl font-semibold text-white flex items-center gap-3">
