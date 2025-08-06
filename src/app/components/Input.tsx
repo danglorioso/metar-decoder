@@ -1,8 +1,9 @@
-'use client'
+"use client" // Contains API call
+
 import { useState } from 'react';
 import { Search, Copy, RefreshCw } from 'lucide-react';
 
-export default function Input() {
+export default function MetarInput() {
     // useStates
     const [customMode, setCustomMode] = useState(false);
     const [airport, setAirport] = useState('');
@@ -11,21 +12,17 @@ export default function Input() {
 
     async function fetchMetar() {
         try {
-            const response = await fetch ('../../api/', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    // selectedItems: selectedItems.map(item => item.id),
-                }),
-            });
-
+            // Call API
+            const response = await fetch(`/api/fetchMetar?icao=${airport}`);
+            
+            // Check response from API call
             if (!response.ok) {
-                throw new Error('Error');
+                throw new Error('Failed to fetch METAR data');
             }
 
-            const result = await response.json();
+            // Retrieve data and set METAR
+            const data = await response.json();
+            setMetarText(data.metar);
 
         } catch (error) {
             console.error('Error', error);
@@ -38,7 +35,7 @@ export default function Input() {
                 <div className="flex flex-col lg:flex-row gap-6">
                     {/* Mode Selection */}
                     <div className="">
-                        <label className="block text-sm font-medium text-gray-300 mb-3">
+                        <label className="block text-sm font-semibold text-gray-300 mb-3">
                             Input Mode
                         </label>
                         <div className="flex gap-2">
@@ -74,7 +71,7 @@ export default function Input() {
                     {/* Airport Input */}
                     {!customMode && (
                     <div className="flex-1">
-                        <label className="block text-sm font-medium text-gray-300 mb-3">
+                        <label className="block text-sm font-semibold text-gray-300 mb-3">
                         Airport Code (ICAO)
                         </label>
                         <div className="flex gap-3">
@@ -84,7 +81,7 @@ export default function Input() {
                             onChange={(e) => setAirport(e.target.value.toUpperCase())}
                             className="flex-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-gray-400"
                             placeholder="KBOS"
-                            maxLength={4} // ICAO codes are 3 chars
+                            maxLength={4} // ICAO codes are 4 chars
                         />
                         <button
                             onClick={fetchMetar}
