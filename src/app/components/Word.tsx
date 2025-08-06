@@ -70,7 +70,7 @@ export const getMetarPatterns = () => {
       icon: Plane,
       color: 'text-blue-400',
       bgColor: 'bg-blue-500/20 border-blue-500/30',
-      decode: (match) => `Airport: ${match} (ICAO identifier)`
+      decode: (match: string) => `Airport: ${match} (ICAO identifier)`
     },
     {
       pattern: /\d{6}Z/,
@@ -78,7 +78,7 @@ export const getMetarPatterns = () => {
       icon: null,
       color: 'text-purple-400',
       bgColor: 'bg-purple-500/20 border-purple-500/30',
-      decode: (match) => {
+      decode: (match: string) => {
         const day = match.slice(0, 2);
         const hour = match.slice(2, 4);
         const min = match.slice(4, 6);
@@ -91,7 +91,7 @@ export const getMetarPatterns = () => {
       icon: Wind,
       color: 'text-green-400',
       bgColor: 'bg-green-500/20 border-green-500/30',
-      decode: (match) => {
+      decode: (match: string) => {
         if (match.includes('G')) {
           const dir = match.slice(0, 3);
           const speed = match.slice(3, 5);
@@ -110,7 +110,7 @@ export const getMetarPatterns = () => {
       icon: Eye,
       color: 'text-yellow-400',
       bgColor: 'bg-yellow-500/20 border-yellow-500/30',
-      decode: (match) => {
+      decode: (match: string) => {
         const vis = match.replace('SM', '');
         return `Visibility: ${vis} statute miles`;
       }
@@ -121,10 +121,10 @@ export const getMetarPatterns = () => {
       icon: CloudSnow,
       color: 'text-cyan-400',
       bgColor: 'bg-cyan-500/20 border-cyan-500/30',
-      decode: (match) => {
+      decode: (match: string) => {
         const coverage = match.slice(0, 3);
         const altitude = parseInt(match.slice(3)) * 100;
-        const coverageMap = {
+        const coverageMap: Record<string, string> = {
           'FEW': 'Few clouds',
           'SCT': 'Scattered clouds',
           'BKN': 'Broken clouds',
@@ -139,7 +139,7 @@ export const getMetarPatterns = () => {
       icon: Thermometer,
       color: 'text-red-400',
       bgColor: 'bg-red-500/20 border-red-500/30',
-      decode: (match) => {
+      decode: (match: string) => {
         const [temp, dew] = match.split('/').map(t => 
           t.startsWith('M') ? -parseInt(t.slice(1)) : parseInt(t)
         );
@@ -152,7 +152,7 @@ export const getMetarPatterns = () => {
       icon: null,
       color: 'text-orange-400',
       bgColor: 'bg-orange-500/20 border-orange-500/30',
-      decode: (match) => {
+      decode: (match: string) => {
         const pressure = (parseInt(match.slice(1)) / 100).toFixed(2);
         return `Altimeter: ${pressure} inHg`;
       }
