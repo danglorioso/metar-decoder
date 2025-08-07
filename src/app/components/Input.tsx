@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Search, Copy, RefreshCw } from 'lucide-react';
+import { useAirportData, validateIcaoCode, getAirportByIcao } from '../hooks/useAirportData';
 
 type InputProps = {
     metarText: string;
@@ -12,6 +13,13 @@ export default function MetarInput({ metarText, setMetarText }: InputProps) {
     const [customMode, setCustomMode] = useState(false);
     const [icao, setICAO] = useState('');
     const [loading, setLoading] = useState(false);
+    
+    // Load airport data
+    const { airportsByIcao, isLoading: airportDataLoading, error: airportDataError } = useAirportData();
+    
+    // Validation logic for ICAO code
+    const isIcaoValid = icao && icao.length === 4 && !airportDataLoading && validateIcaoCode(icao, airportsByIcao);
+    const canFetch = isIcaoValid && !airportDataError;
 
     async function fetchMetar() {
         setLoading(true);
@@ -96,13 +104,22 @@ export default function MetarInput({ metarText, setMetarText }: InputProps) {
                         />
                         <button
                             onClick={fetchMetar}
-                            disabled={loading}
+                            disabled={loading || airportDataLoading || !canFetch}
                             className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg transition-colors duration-200 flex items-center gap-2"
                         >
-                            {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-                            Fetch
+                            {(loading || airportDataLoading) ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
+                            {airportDataLoading ? 'Loading...' : 'Fetch'}
                         </button>
                         </div>
+
+                        {/* Airport info display */}
+                        {icao && icao.length === 4 && !airportDataLoading && !validateIcaoCode(icao, airportsByIcao) && (
+                            <div className="mt-2">
+                                <div className="text-red-400 text-sm">
+                                    ICAO code not found.
+                                </div>
+                            </div>
+                        )}
                     </div>
                     )}
                 </div>
