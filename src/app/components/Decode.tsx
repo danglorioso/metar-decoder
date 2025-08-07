@@ -18,7 +18,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       icon: null,
       color: 'text-rose-400',
       bgColor: 'bg-rose-500/20 border-rose-500/30',
-      decode: () => 'Fully automated report.'
+      decode: () => 'Fully automated report'
     },
     {
       pattern: /FU/,
@@ -26,7 +26,15 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       icon: null,
       color: 'text-slate-400',
       bgColor: 'bg-slate-500/20 border-slate-500/30',
-      decode: () => 'Smoke.'
+      decode: () => 'Smoke'
+    },
+    {
+      pattern: /BR/,
+      type: 'mist',
+      icon: null,
+      color: 'text-violet-400',
+      bgColor: 'bg-violet-500/20 border-violet-500/30',
+      decode: () => 'Mist'
     },
     {
       pattern: /^[A-Z]{4}$/,
@@ -218,7 +226,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       icon: null,
       color: 'text-slate-400',
       bgColor: 'bg-slate-500/20 border-slate-500/30',
-      decode: () => 'Automated station requires maintenance.'
+      decode: () => 'Automated station requires maintenance'
     },
   ];
 };
