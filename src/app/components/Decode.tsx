@@ -196,6 +196,13 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
         return `Precise temperature: ${tempValue.toFixed(1)}°C, Dewpoint: ${dewValue.toFixed(1)}°C`;
       }
     },
-
+    {
+      pattern: /$/,
+      type: 'maintenance',
+      icon: null,
+      color: 'text-slate-400',
+      bgColor: 'bg-slate-500/20 border-slate-500/30',
+      decode: () => 'Automated station requires maintenance.'
+    },
   ];
 };
