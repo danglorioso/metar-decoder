@@ -94,15 +94,20 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       }
     },
     {
-      pattern: /\d{2}\/\d{2}/,
+      pattern: /\d{2}\/\d{2}|\d{2}\/M\d{2}|M\d{2}\/\d{2}|M\d{2}\/M\d{2}/,
       type: 'temperature',
       icon: Thermometer,
       color: 'text-red-400',
       bgColor: 'bg-red-500/20 border-red-500/30',
       decode: (match: string) => {
-        const [temp, dew] = match.split('/').map(t => 
-          t.startsWith('M') ? -parseInt(t.slice(1)) : parseInt(t)
-        );
+        const [tempStr, dewStr] = match.split('/');
+        
+        // Parse temperature
+        const temp = tempStr.startsWith('M') ? -parseInt(tempStr.slice(1)) : parseInt(tempStr);
+        
+        // Parse dewpoint
+        const dew = dewStr.startsWith('M') ? -parseInt(dewStr.slice(1)) : parseInt(dewStr);
+        
         return `Temperature: ${temp}°C, Dewpoint: ${dew}°C`;
       }
     },
