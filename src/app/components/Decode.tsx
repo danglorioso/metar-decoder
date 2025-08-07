@@ -1,4 +1,4 @@
-import { Plane, Wind, Eye, CloudSnow, Thermometer, Gauge, Clock } from 'lucide-react';
+import { Plane, Wind, Eye, CloudSnow, Thermometer, Gauge, Clock, CloudRainWind } from 'lucide-react';
 
 // Define the Airport type locally to avoid circular dependencies
 interface Airport {
@@ -13,7 +13,7 @@ interface Airport {
 export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
   return [
     {
-      pattern: /AUTO/,
+      pattern: /\bAUTO\b/,
       type: 'auto',
       icon: null,
       color: 'text-rose-400',
@@ -21,7 +21,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       decode: () => 'Fully automated report'
     },
     {
-      pattern: /FU/,
+      pattern: /\bFU\b/,
       type: 'smoke',
       icon: null,
       color: 'text-slate-400',
@@ -29,7 +29,18 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       decode: () => 'Smoke'
     },
     {
-      pattern: /RA/,
+      pattern: /RAB\d{2}/,
+      type: 'rain-began',
+      icon: CloudRainWind,
+      color: 'text-blue-400',
+      bgColor: 'bg-blue-500/20 border-blue-500/30',
+      decode: (match: string) => {
+        const minutes = parseInt(match.slice(3));
+        return `Rain began ${minutes} minutes after the hour`;
+      }
+    },
+    {
+      pattern: /\bRA\b/,
       type: 'rain',
       icon: null,
       color: 'text-blue-400',
@@ -37,7 +48,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       decode: () => 'Rain'
     },
     {
-      pattern: /HZ/,
+      pattern: /\bHZ\b/,
       type: 'haze',
       icon: null,
       color: 'text-violet-400',
@@ -45,7 +56,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       decode: () => 'Haze'
     },
     {
-      pattern: /BR/,
+      pattern: /\bBR\b/,
       type: 'mist',
       icon: null,
       color: 'text-violet-400',
@@ -53,7 +64,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       decode: () => 'Mist'
     },
     {
-      pattern: /FG/,
+      pattern: /\bFG\b/,
       type: 'fog',
       icon: null,
       color: 'text-slate-400',
@@ -61,7 +72,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       decode: () => 'Fog'
     },
     {
-      pattern: /CB/,
+      pattern: /\bCB\b/,
       type: 'cumulonimbus',
       icon: null,
       color: 'text-sky-400',
@@ -69,7 +80,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       decode: () => 'Cumulonimbus clouds'
     },
     {
-      pattern: /PWINO/,
+      pattern: /\bPWINO\b/,
       type: 'percip-no',
       icon: null,
       color: 'text-amber-400',
@@ -77,7 +88,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       decode: () => 'Precipitation identifier sensor not available'
     },
     {
-      pattern: /FRQ/,
+      pattern: /\bFRQ\b/,
       type: 'frq-lightning',
       icon: null,
       color: 'text-orange-400',
@@ -85,7 +96,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       decode: () => 'Frequent'
     },
     {
-      pattern: /PNO/,
+      pattern: /\bPNO\b/,
       type: 'percip-amt-no',
       icon: null,
       color: 'text-sky-400',
@@ -93,7 +104,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       decode: () => 'Percipitation amount not available'
     },
     {
-      pattern: /LTG/,
+      pattern: /\bLTG\b/,
       type: 'lightning',
       icon: null,
       color: 'text-amber-400',
@@ -101,7 +112,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       decode: () => 'Lightning detected'
     },
     {
-      pattern: /PK/,
+      pattern: /\bPK\b/,
       type: 'peak',
       icon: null,
       color: 'text-cyan-400',
@@ -109,7 +120,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       decode: () => 'Peak'
     },
     {
-      pattern: /WND/,
+      pattern: /\bWND\b/,
       type: 'wind',
       icon: null,
       color: 'text-cyan-400',
