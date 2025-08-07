@@ -72,7 +72,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       }
     },
     {
-      pattern: /FEW\d{3}|SCT\d{3}|BKN\d{3}|OVC\d{3}/,
+      pattern: /FEW\d{3}|SCT\d{3}|BKN\d{3}|OVC\d{3}|CLR/,
       type: 'clouds',
       icon: CloudSnow,
       color: 'text-cyan-400',
@@ -84,7 +84,8 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
           'FEW': 'Few clouds',
           'SCT': 'Scattered clouds',
           'BKN': 'Broken clouds',
-          'OVC': 'Overcast'
+          'OVC': 'Overcast',
+          'CLR': 'Clear'
         };
         return `${coverageMap[coverage]} at ${altitude} feet`;
       }
@@ -120,6 +121,50 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       color: 'text-gray-400',
       bgColor: 'bg-gray-500/20 border-gray-500/30',
       decode: () => 'Remarks section begins'
-    }
+    },
+    {
+      pattern: /AO2|AO1/,
+      type: 'perc-discriminator',
+      icon: null,
+      color: 'text-indigo-400',
+      bgColor: 'bg-indigo-500/20 border-indigo-500/30',
+      decode: (match: string) => {
+        const desc =
+          match === 'AO2'
+            ? 'Automated station with precipitation discriminator'
+            : match === 'AO1'
+            ? 'Automated station without precipitation discriminator'
+            : 'Unknown precipitation discriminator';
+        return desc;
+      }
+    },
+    {
+      pattern: /SLP\d{3}|SLPNO/,
+      type: 'slp',
+      icon: null,
+      color: 'text-gray-400',
+      bgColor: 'bg-gray-500/20 border-gray-500/30',
+      decode: (match: string) => {
+        if (match === 'SLPNO') {
+          return 'Sea-level pressure not available';
+        }
+        
+        const digits = match.slice(3); // Get the 3 digits after SLP
+        const partial = parseInt(digits);
+        
+        // Calculate both possible values
+        const with9 = 900 + partial / 10;  // 9xx.x format
+        const with10 = 1000 + partial / 10; // 10xx.x format
+        
+        // Choose the value closest to standard sea-level pressure (1013.2 hPa)
+        const standardPressure = 1013.2;
+        const diff9 = Math.abs(with9 - standardPressure);
+        const diff10 = Math.abs(with10 - standardPressure);
+        
+        const actualPressure = diff9 < diff10 ? with9 : with10;
+        
+        return `Sea-level pressure: ${actualPressure.toFixed(1)} hPa`;
+      }
+    },
   ];
 };

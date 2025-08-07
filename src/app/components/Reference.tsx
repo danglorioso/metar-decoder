@@ -19,6 +19,7 @@ export default function Reference() {
                     </h4>
                         <div className="space-y-3">
                             {[
+                            { code: 'CLR', desc: 'Clear, no clouds (0 oktas)', color: 'text-cyan-400' },
                             { code: 'FEW', desc: 'Few clouds (1-2 oktas)', color: 'text-cyan-400' },
                             { code: 'SCT', desc: 'Scattered clouds (3-4 oktas)', color: 'text-cyan-400' },
                             { code: 'BKN', desc: 'Broken clouds (5-7 oktas)', color: 'text-cyan-400' },
