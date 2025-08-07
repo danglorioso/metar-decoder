@@ -1,4 +1,4 @@
-import { Plane, Wind, Eye, CloudSnow, Thermometer, Gauge, Clock, CloudRainWind, Waves, CircleAlert, NotebookPen, Droplet, Snowflake, Zap, CloudHail } from 'lucide-react';
+import { Plane, Wind, Eye, CloudSnow, Thermometer, Gauge, Clock, CloudRainWind, Waves, CircleAlert, NotebookPen, Droplet, Snowflake, Zap, CloudHail, CircleGauge } from 'lucide-react';
 
 // Define the Airport type locally to avoid circular dependencies
 interface Airport {
@@ -44,7 +44,67 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       }
     },
     {
-      pattern: /[-+]?RA\b/,
+      pattern: /RAE\d{2}/,
+      type: 'rain-end',
+      icon: CloudRainWind,
+      color: 'text-blue-400',
+      bgColor: 'bg-blue-500/20 border-blue-500/30',
+      decode: (match: string) => {
+        const minutes = parseInt(match.slice(3));
+        if (minutes == 1) {
+          return 'Rain ending 1 minute after the hour';
+        } else {
+          return `Rain ending ${minutes} minutes after the hour`;
+        }
+      }
+    },
+    {
+      pattern: /TSB\d{2}/,
+      type: 'thudnerstorm-began',
+      icon: Zap,
+      color: 'text-orange-400',
+      bgColor: 'bg-orange-500/20 border-orange-500/30',
+      decode: (match: string) => {
+        const minutes = parseInt(match.slice(3));
+        if (minutes == 1) {
+          return 'Thunderstorm began 1 minute after the hour';
+        } else {
+          return `Thunderstorm began ${minutes} minutes after the hour`;
+        }
+      }
+    },
+    {
+      pattern: /TSE\d{2}/,
+      type: 'thudnerstorm-end',
+      icon: Zap,
+      color: 'text-orange-400',
+      bgColor: 'bg-orange-500/20 border-orange-500/30',
+      decode: (match: string) => {
+        const minutes = parseInt(match.slice(3));
+        if (minutes == 1) {
+          return 'Thunderstorm ending 1 minute after the hour';
+        } else {
+          return `Thunderstorm ending ${minutes} minutes after the hour`;
+        }
+      }
+    },
+    {
+      pattern: /DZB\d{2}/,
+      type: 'drizzle-began',
+      icon: CloudRainWind,
+      color: 'text-blue-400',
+      bgColor: 'bg-blue-500/20 border-blue-500/30',
+      decode: (match: string) => {
+        const minutes = parseInt(match.slice(3));
+        if (minutes == 1) {
+          return 'Drizzle began 1 minute after the hour';
+        } else {
+          return `Drizzle began ${minutes} minutes after the hour`;
+        }
+      }
+    },
+    {
+      pattern: /(?:^|(?<=\s))[-+]?RA(?=\s|$)/,
       type: 'rain',
       icon: Droplet,
       color: 'text-blue-400',
@@ -60,7 +120,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       }
     },
     {
-      pattern: /[-+]?DZ\b/,
+      pattern: /(?:^|(?<=\s))[-+]?DZ(?=\s|$)/,
       type: 'drizzle',
       icon: Droplet,
       color: 'text-blue-400',
@@ -76,7 +136,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       }
     },
     {
-      pattern: /[-+]?SN\b/,
+      pattern: /(?:^|(?<=\s))[-+]?SN(?=\s|$)/,
       type: 'snow',
       icon: Snowflake,
       color: 'text-blue-400',
@@ -92,7 +152,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       }
     },
     {
-      pattern: /[-+]?SG\b/,
+      pattern: /(?:^|(?<=\s))[-+]?SG(?=\s|$)/,
       type: 'snow-grain',
       icon: Snowflake,
       color: 'text-blue-400',
@@ -108,7 +168,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       }
     },
     {
-      pattern: /[-+]?IC\b/,
+      pattern: /(?:^|(?<=\s))[-+]?IC(?=\s|$)/,
       type: 'ice-crystals',
       icon: Snowflake,
       color: 'text-blue-400',
@@ -124,7 +184,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       }
     },
     {
-      pattern: /[-+]?PL\b/,
+      pattern: /(?:^|(?<=\s))[-+]?PL(?=\s|$)/,
       type: 'ice-pellets',
       icon: Snowflake,
       color: 'text-blue-400',
@@ -140,7 +200,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       }
     },
     {
-      pattern: /[-+]?GR\b/,
+      pattern: /(?:^|(?<=\s))[-+]?GR(?=\s|$)/,
       type: 'hail',
       icon: CloudHail,
       color: 'text-blue-400',
@@ -156,7 +216,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       }
     },
     {
-      pattern: /[-+]?GS\b/,
+      pattern: /(?:^|(?<=\s))[-+]?GS(?=\s|$)/,
       type: 'snow-pellets',
       icon: CloudHail,
       color: 'text-blue-400',
@@ -252,6 +312,45 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       decode: () => 'Frequent'
     },
     {
+      pattern: /(?:^|(?<=\s))[-+]?TS(RA)?(?=\s|$)/,
+      type: 'thunderstorm',
+      icon: Zap,
+      color: 'text-orange-400',
+      bgColor: 'bg-orange-500/20 border-orange-500/30',
+      decode: (match: string) => {
+        let intensity = '';
+        let hasRain = false;
+        
+        // Check for intensity prefix
+        if (match.startsWith('-')) {
+          intensity = 'Light ';
+        } else if (match.startsWith('+')) {
+          intensity = 'Heavy';
+        } else {
+          intensity = 'Moderate';
+        }
+        
+        // Check for rain
+        if (match.includes('RA')) {
+          hasRain = true;
+        }
+        
+        if (hasRain) {
+          return `${intensity} thunderstorm with rain`;
+        } else {
+          return `${intensity} thunderstorm`;
+        }
+      }
+    },
+    {
+      pattern: /\bVCTS\b/,
+      type: 'vicinity-thunderstorm',
+      icon: Zap,
+      color: 'text-orange-400',
+      bgColor: 'bg-orange-500/20 border-orange-500/30',
+      decode: () => 'Vicinity thunderstorm'
+    },
+    {
       pattern: /\bPNO\b/,
       type: 'percip-amt-no',
       icon: null,
@@ -260,7 +359,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       decode: () => 'Percipitation amount not available'
     },
     {
-      pattern: /\bLTG\b|LTG(CG|CC|IC|CCCG|CCIC|CGIC|CCCGIC)\b/,
+      pattern: /\bLTG\b|LTG(CG|CC|IC)+\b/,
       type: 'lightning',
       icon: Zap,
       color: 'text-amber-400',
@@ -269,18 +368,30 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
         if (match === 'LTG') {
           return 'Lightning detected';
         }
-        const suffix = match.slice(3); // Get characters after LTG
-        const lightningTypes: Record<string, string> = {
-          'CG': 'Cloud-to-Ground lightning',
-          'CC': 'Cloud-to-Cloud lightning',
-          'IC': 'Intra-Cloud lightning',
-          'CCCG': 'Cloud-to-Cloud and Cloud-to-Ground lightning',
-          'CCIC': 'Cloud-to-Cloud and Intra-Cloud lightning',
-          'CGIC': 'Cloud-to-Ground and Intra-Cloud lightning',
-          'CCCGIC': 'Multiple types observed (Cloud-to-Cloud, Cloud-to-Ground, and Intra-Cloud)'
-        };
         
-        return lightningTypes[suffix] || `Lightning detected (${suffix})`;
+        const suffix = match.slice(3); // Get characters after LTG
+        const types = [];
+        
+        // Parse the suffix to identify individual lightning types
+        if (suffix.includes('CG')) {
+          types.push('Cloud-to-Ground');
+        }
+        if (suffix.includes('CC')) {
+          types.push('Cloud-to-Cloud');
+        }
+        if (suffix.includes('IC')) {
+          types.push('Intra-Cloud');
+        }
+        
+        if (types.length === 0) {
+          return `Lightning detected (${suffix})`;
+        } else if (types.length === 1) {
+          return `${types[0]} lightning`;
+        } else if (types.length === 2) {
+          return `${types.join(' and ')} lightning`;
+        } else {
+          return `Lightning detected (${types.join(', ')})`;
+        }
       }
     },
     {
@@ -352,12 +463,52 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       decode: () => 'All quadrants'
     },
     {
+      pattern: /\bMOV\b/,
+      type: 'moving',
+      icon: null,
+      color: 'text-rose-400',
+      bgColor: 'bg-rose-500/20 border-rose-500/30',
+      decode: () => 'Moving'
+    },
+    {
       pattern: /\bDSNT\b/,
       type: 'distant',
       icon: null,
       color: 'text-orange-400',
       bgColor: 'bg-orange-500/20 border-orange-500/30',
       decode: () => 'Distant'
+    },
+    {
+      pattern: /\bVC\b/,
+      type: 'vicinity',
+      icon: null,
+      color: 'text-orange-400',
+      bgColor: 'bg-orange-500/20 border-orange-500/30',
+      decode: () => 'In the vicinity'
+    },
+    {
+      pattern: /\bOHD\b/,
+      type: 'overhead',
+      icon: null,
+      color: 'text-pink-400',
+      bgColor: 'bg-pink-500/20 border-pink-500/30',
+      decode: () => 'Overhead'
+    },
+    {
+      pattern: /\bALF\b/,
+      type: 'aloft',
+      icon: null,
+      color: 'text-orange-400',
+      bgColor: 'bg-orange-500/20 border-orange-500/30',
+      decode: () => 'Aloft'
+    },
+    {
+      pattern: /\bOCNL\b/,
+      type: 'occasional',
+      icon: null,
+      color: 'text-green-400',
+      bgColor: 'bg-green-500/20 border-green-500/30',
+      decode: () => 'Occasional'
     },
     {
       pattern: /OBSC[GNEWSAL]+/,
@@ -429,25 +580,41 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       }
     },
     {
-      pattern: /\d{5}KT|\d{3}\d{2}G\d{2}KT|VRB\d{2}KT/,
+      pattern: /\d{5}KT|\d{3}\d{2}G\d{2}KT|VRB\d{2}KT|VRB\d{2}G\d{2}KT/,
       type: 'wind',
       icon: Wind,
       color: 'text-green-400',
       bgColor: 'bg-green-500/20 border-green-500/30',
       decode: (match: string) => {
-        if (match.includes('G')) {
+        if (match.includes('G') && !match.includes('VRB')) {
           const dir = match.slice(0, 3);
           const speed = match.slice(3, 5);
           const gust = match.slice(6, 8);
           return `Wind: ${dir}° at ${speed} knots, gusting to ${gust} knots`;
+        } else if (match.includes('G') && match.includes('VRB')) {
+          const speed = match.slice(3,5);
+          const gust = match.slice(6,8);
+          return `Wind: variable at ${speed} knots, gusting to ${gust} knots`;
         } else if (match.includes('VRB')) {
-          const speed = match.slice(3,5)
+          const speed = match.slice(3,5);
           return `Wind: variable at ${speed} knots`;
         } else {
           const dir = match.slice(0, 3);
           const speed = match.slice(3, 5);
           return `Wind: ${dir}° at ${speed} knots`;
         }
+      }
+    },
+    {
+      pattern: /\d{3}V\d{3}/,
+      type: 'altimeter',
+      icon: Gauge,
+      color: 'text-orange-400',
+      bgColor: 'bg-orange-500/20 border-orange-500/30',
+      decode: (match: string) => {
+        const min_dir = match.slice(0, 3);
+        const max_dir = match.slice(4, 7);
+        return `Winds varying from ${min_dir}° to ${max_dir}°`;
       }
     },
     {
@@ -523,6 +690,28 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       }
     },
     {
+      pattern: /6\d{4}|6\/\/\/\//,
+      type: 'precip-3hr',
+      icon: Droplet,
+      color: 'text-blue-400',
+      bgColor: 'bg-blue-500/20 border-blue-500/30',
+      decode: (match: string) => {
+        if (match === '6////') {
+          return '3-hour precipitation amount: Missing or unavailable data';
+        }
+        const amount = (parseInt(match.slice(1)) / 100).toFixed(3);
+        return `3-hour precipitation amount: ${amount} inches`;
+      }
+    },
+    {
+      pattern: /PRESRR/,
+      type: 'pressure-rapid',
+      icon: CircleGauge,
+      color: 'text-orange-400',
+      bgColor: 'bg-orange-500/20 border-orange-500/30',
+      decode: () => 'Pressure rising rapidly'
+    },
+    {
       pattern: /RMK/,
       type: 'remarks',
       icon: NotebookPen,
@@ -530,6 +719,14 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       bgColor: 'bg-gray-500/20 border-gray-500/30',
       decode: () => 'Remarks section begins'
     },
+    // {
+    //   pattern: /\bAND\b/,
+    //   type: 'and',
+    //   icon: null,
+    //   color: 'text-gray-400',
+    //   bgColor: 'bg-gray-500/20 border-gray-500/30',
+    //   decode: () => 'And'
+    // },
     {
       pattern: /AO2|AO1/,
       type: 'perc-discriminator',
