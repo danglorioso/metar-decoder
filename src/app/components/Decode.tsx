@@ -197,7 +197,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       }
     },
     {
-      pattern: /$/,
+      pattern: /\$$/,
       type: 'maintenance',
       icon: null,
       color: 'text-slate-400',
