@@ -44,13 +44,21 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       bgColor: 'bg-violet-500/20 border-violet-500/30',
       decode: () => 'Haze'
     },
-      {
+    {
       pattern: /BR/,
       type: 'mist',
       icon: null,
       color: 'text-violet-400',
       bgColor: 'bg-violet-500/20 border-violet-500/30',
       decode: () => 'Mist'
+    },
+    {
+      pattern: /FG/,
+      type: 'fog',
+      icon: null,
+      color: 'text-slate-400',
+      bgColor: 'bg-slate-500/20 border-slate-500/30',
+      decode: () => 'Fog'
     },
     {
       pattern: /CB/,
@@ -91,6 +99,22 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       color: 'text-amber-400',
       bgColor: 'bg-amber-500/20 border-amber-500/30',
       decode: () => 'Lightning detected'
+    },
+    {
+      pattern: /PK/,
+      type: 'peak',
+      icon: null,
+      color: 'text-cyan-400',
+      bgColor: 'bg-cyan-500/20 border-cyan-500/30',
+      decode: () => 'Peak'
+    },
+    {
+      pattern: /WND/,
+      type: 'wind',
+      icon: null,
+      color: 'text-cyan-400',
+      bgColor: 'bg-cyan-500/20 border-cyan-500/30',
+      decode: () => 'Wind'
     },
     {
       pattern: /^[A-Z]{4}$/,
