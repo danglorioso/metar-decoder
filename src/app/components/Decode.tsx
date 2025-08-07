@@ -13,6 +13,22 @@ interface Airport {
 export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
   return [
     {
+      pattern: /AUTO/,
+      type: 'auto',
+      icon: null,
+      color: 'text-rose-400',
+      bgColor: 'bg-rose-500/20 border-rose-500/30',
+      decode: () => 'Fully automated report.'
+    },
+    {
+      pattern: /FU/,
+      type: 'smoke',
+      icon: null,
+      color: 'text-slate-400',
+      bgColor: 'bg-slate-500/20 border-slate-500/30',
+      decode: () => 'Smoke.'
+    },
+    {
       pattern: /^[A-Z]{4}$/,
       type: 'station',
       icon: Plane,
