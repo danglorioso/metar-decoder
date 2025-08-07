@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { MetarWord } from './Word';
 import { getMetarPatterns } from './Decode';
 import { Copy, Eye } from 'lucide-react';
+import { useAirportData } from '../hooks/useAirportData';
 
 type DisplayProps = {
   metarText: string;
@@ -12,7 +13,10 @@ type DisplayProps = {
 export default function Display({ metarText }: DisplayProps) {
     // useStates
     const [showFullTranslation, setShowFullTranslation] = useState(false);
-    const metarPatterns = getMetarPatterns();
+    
+    // Load airport data
+    const { airportsByIcao } = useAirportData();
+    const metarPatterns = getMetarPatterns(airportsByIcao);
 
     const generateFullTranslation = () => {
         const parts = metarText.split(/\s+/);

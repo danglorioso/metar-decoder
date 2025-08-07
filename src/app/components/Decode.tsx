@@ -1,6 +1,16 @@
 import { Plane, Wind, Eye, CloudSnow, Thermometer } from 'lucide-react';
 
-export const getMetarPatterns = () => {
+// Define the Airport type locally to avoid circular dependencies
+interface Airport {
+  iata: string;
+  icao: string;
+  name: string;
+  country: string;
+  city: string;
+  information: string;
+}
+
+export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
   return [
     {
       pattern: /^[A-Z]{4}$/,
@@ -8,7 +18,15 @@ export const getMetarPatterns = () => {
       icon: Plane,
       color: 'text-blue-400',
       bgColor: 'bg-blue-500/20 border-blue-500/30',
-      decode: (match: string) => `Airport: ${match} (ICAO identifier)`
+      decode: (match: string) => {
+        if (airportsByIcao) {
+          const airport = airportsByIcao.get(match);
+          if (airport) {
+            return `Airport: ${airport.name} (${match}) - ${airport.city}, ${airport.country}`;
+          }
+        }
+        return `Airport: ${match} (ICAO identifier)`;
+      }
     },
     {
       pattern: /\d{6}Z/,
