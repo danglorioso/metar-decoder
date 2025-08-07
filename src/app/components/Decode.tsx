@@ -78,14 +78,17 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       color: 'text-cyan-400',
       bgColor: 'bg-cyan-500/20 border-cyan-500/30',
       decode: (match: string) => {
+        if (match === 'CLR') {
+          return 'Clear skies, no clouds';
+        }
+        
         const coverage = match.slice(0, 3);
         const altitude = parseInt(match.slice(3)) * 100;
         const coverageMap: Record<string, string> = {
           'FEW': 'Few clouds',
           'SCT': 'Scattered clouds',
           'BKN': 'Broken clouds',
-          'OVC': 'Overcast',
-          'CLR': 'Clear'
+          'OVC': 'Overcast'
         };
         return `${coverageMap[coverage]} at ${altitude} feet`;
       }
@@ -170,8 +173,8 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       pattern: /T[01]\d{3}[01]\d{3}/,
       type: 'precise-temp',
       icon: Thermometer,
-      color: 'text-red-400',
-      bgColor: 'bg-red-500/20 border-red-500/30',
+      color: 'text-fuchsia-400',
+      bgColor: 'bg-fuchsia-500/20 border-fuchsia-500/30',
       decode: (match: string) => {
         // Format: T + 4 digits temp + 4 digits dewpoint
         const tempBlock = match.slice(1, 5); // First 4 digits after T
@@ -185,7 +188,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
         const dewSign = dewBlock[0] === '0' ? 1 : -1;
         const dewValue = (parseInt(dewBlock.slice(1)) / 10) * dewSign;
         
-        return `Precise temperature: ${tempValue.toFixed(1)}°C, dewpoint: ${dewValue.toFixed(1)}°C`;
+        return `Precise temperature: ${tempValue.toFixed(1)}°C, Dewpoint: ${dewValue.toFixed(1)}°C`;
       }
     },
 
