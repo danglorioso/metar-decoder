@@ -37,6 +37,14 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       decode: () => 'Mist'
     },
     {
+      pattern: /CB/,
+      type: 'cumulonimbus',
+      icon: null,
+      color: 'text-sky-400',
+      bgColor: 'bg-sky-500/20 border-sky-500/30',
+      decode: () => 'Cumulonimbus clouds'
+    },
+    {
       pattern: /^[A-Z]{4}$/,
       type: 'station',
       icon: Plane,
