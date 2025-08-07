@@ -5,14 +5,16 @@ import { MetarWord } from './Word';
 import { getMetarPatterns } from './Decode';
 import { Copy, Eye } from 'lucide-react';
 import { useAirportData } from '../hooks/useAirportData';
+import { MetarArray } from '../types/MetarArray';
 
 type DisplayProps = {
-  metarText: string;
+    metarObject: MetarArray | null;
 };
 
-export default function Display({ metarText }: DisplayProps) {
+export default function Display({ metarObject }: DisplayProps) {
     // useStates
     const [showFullTranslation, setShowFullTranslation] = useState(false);
+    const metarText = metarObject ? metarObject.rawOb : '';
     
     // Load airport data
     const { airportsByIcao } = useAirportData();
@@ -52,11 +54,16 @@ export default function Display({ metarText }: DisplayProps) {
         <div className="max-w-6xl mx-auto px-6">
             <div className="max-w-6xl p-6 space-y-8 bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl">
                 {/* Header */}
-                <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-semibold text-white flex items-center gap-3">
-                        <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                        Live METAR Report
-                    </h2>
+                <div className="flex justify-between items-center mb-4">
+                    <div>
+                        <h2 className="text-2xl font-semibold text-white flex items-center gap-3">
+                            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                            Live METAR Report
+                        </h2>
+                        <p className="text-gray-400 text-sm mt-1">
+                            <span className="font-semibold">Last updated:</span> {metarObject ? new Date(metarObject.reportTime).toLocaleString() : 'No METAR data available'}
+                        </p>
+                    </div>
                     <div className="flex gap-3">
                     <button
                         onClick={() => navigator.clipboard.writeText(metarText)}

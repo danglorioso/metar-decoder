@@ -3,16 +3,18 @@
 import { useState } from 'react';
 import { Search, Copy, RefreshCw } from 'lucide-react';
 import { useAirportData, validateIcaoCode, getAirportByIcao } from '../hooks/useAirportData';
+import { MetarArray } from '../types/MetarArray';
 
 type InputProps = {
-    metarText: string;
-  setMetarText: (text: string) => void;
+    metarObject: MetarArray | null;
+    setMetarObject: (text: MetarArray | null) => void;
 };
 
-export default function MetarInput({ metarText, setMetarText }: InputProps) {
+export default function MetarInput({ metarObject, setMetarObject }: InputProps) {
     const [customMode, setCustomMode] = useState(false);
     const [icao, setICAO] = useState('');
     const [loading, setLoading] = useState(false);
+    const [metarText, setMetarText] = useState('');
     
     // Load airport data
     const { airportsByIcao, isLoading: airportDataLoading, error: airportDataError } = useAirportData();
@@ -20,6 +22,51 @@ export default function MetarInput({ metarText, setMetarText }: InputProps) {
     // Validation logic for ICAO code
     const isIcaoValid = icao && icao.length === 4 && !airportDataLoading && validateIcaoCode(icao, airportsByIcao);
     const canFetch = isIcaoValid && !airportDataError;
+
+    async function handleCustomMetar(metarText: string) {
+        setMetarText(metarText);
+        
+        // Create a minimal MetarArray object for custom METAR
+        const customMetarObject: MetarArray = {
+            metar_id: 0,
+            icaoId: metarText.split(' ')[0] || 'UNKN', // Extract ICAO from first word
+            receiptTime: new Date().toISOString(),
+            obsTime: Date.now() / 1000,
+            reportTime: new Date().toISOString(),
+            temp: 0,
+            dewp: 0,
+            wdir: 0,
+            wspd: 0,
+            wgst: null,
+            visib: 0,
+            altim: 0,
+            slp: 0,
+            qcField: 0,
+            wxString: null,
+            presTend: null,
+            maxT: null,
+            minT: null,
+            maxT24: null,
+            minT24: null,
+            precip: null,
+            pcp3hr: null,
+            pcp6hr: null,
+            pcp24hr: null,
+            snow: null,
+            vertVis: null,
+            metarType: "METAR",
+            rawOb: metarText, // **
+            mostRecent: 1,
+            lat: 0,
+            lon: 0,
+            elev: 0,
+            prior: 0,
+            name: "Custom METAR",
+            clouds: []
+        };
+        
+        setMetarObject(customMetarObject);
+    }
 
     async function fetchMetar() {
         setLoading(true);
@@ -34,13 +81,16 @@ export default function MetarInput({ metarText, setMetarText }: InputProps) {
 
             // Retrieve data and set METAR
             const data = await response.json();
+            console.log("Fetched METAR data:", data);
 
             // Check if data is valid and contains METAR
             if (!Array.isArray(data) || data.length === 0 || !data[0].rawOb) {
                 console.error("No valid METAR found in data:", data);
-                setMetarText("No METAR found");
+                // setMetarText("No METAR found");
+                setMetarObject(null);
             } else {
-                setMetarText(data[0].rawOb);
+                setMetarObject(data[0]);
+                // setMetarText(data[0].rawOb);
             }
         } catch (error) {
             console.error('Error', error);
@@ -130,13 +180,15 @@ export default function MetarInput({ metarText, setMetarText }: InputProps) {
                     <label className="block text-sm font-medium text-gray-300 mb-3">
                         Enter METAR Text
                     </label>
-                    <textarea
-                        value={metarText}
-                        onChange={(e) => setMetarText(e.target.value)}
-                        className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-gray-400 font-mono"
-                        rows={3}
-                        placeholder="Paste your METAR report here..."
-                    />
+                    <div className="flex gap-3">
+                        <textarea
+                            value={metarText}
+                            onChange={(e) => handleCustomMetar(e.target.value.toUpperCase())}
+                            className="flex-1 px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-gray-400 font-mono"
+                            rows={3}
+                            placeholder="Paste your METAR report here..."
+                        />
+                    </div>
                     </div>
                 )}
             </div>
