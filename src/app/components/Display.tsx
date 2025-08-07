@@ -44,6 +44,9 @@ export default function Display({ metarObject }: DisplayProps) {
         const decoded = decodeMetarPart(part);
         if (decoded) {
             translation.push(decoded.explanation);
+        } else {
+            // If no decode available, use the actual word
+            translation.push(part);
         }
         });
         
@@ -54,15 +57,15 @@ export default function Display({ metarObject }: DisplayProps) {
         <div className="max-w-6xl mx-auto px-6">
             <div className="max-w-6xl p-6 space-y-8 bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl">
                 {/* Header */}
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex justify-between items-center">
                     <div>
                         <h2 className="text-2xl font-semibold text-white flex items-center gap-3">
                             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                             Live METAR Report
                         </h2>
-                        <p className="text-gray-400 text-sm mt-1">
-                            <span className="font-semibold">Last updated:</span> {metarObject ? new Date(metarObject.reportTime).toLocaleString() : 'No METAR data available'}
-                        </p>
+                        <div className="text-gray-400 text-sm mt-1">
+                            <span className="font-semibold">Last updated:</span> {metarObject ? new Date(metarObject.reportTime).toLocaleString() + ' UTC' : 'No METAR data available'}
+                        </div>
                     </div>
                     <div className="flex gap-3">
                     <button
