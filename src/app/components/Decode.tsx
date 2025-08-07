@@ -1,4 +1,4 @@
-import { Plane, Wind, Eye, CloudSnow, Thermometer } from 'lucide-react';
+import { Plane, Wind, Eye, CloudSnow, Thermometer, Gauge, Clock } from 'lucide-react';
 
 // Define the Airport type locally to avoid circular dependencies
 interface Airport {
@@ -29,6 +29,22 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       decode: () => 'Smoke'
     },
     {
+      pattern: /RA/,
+      type: 'rain',
+      icon: null,
+      color: 'text-blue-400',
+      bgColor: 'bg-blue-500/20 border-blue-500/30',
+      decode: () => 'Rain'
+    },
+    {
+      pattern: /HZ/,
+      type: 'haze',
+      icon: null,
+      color: 'text-violet-400',
+      bgColor: 'bg-violet-500/20 border-violet-500/30',
+      decode: () => 'Haze'
+    },
+      {
       pattern: /BR/,
       type: 'mist',
       icon: null,
@@ -43,6 +59,30 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       color: 'text-sky-400',
       bgColor: 'bg-sky-500/20 border-sky-500/30',
       decode: () => 'Cumulonimbus clouds'
+    },
+    {
+      pattern: /PWINO/,
+      type: 'percip-no',
+      icon: null,
+      color: 'text-amber-400',
+      bgColor: 'bg-amber-500/20 border-amber-500/30',
+      decode: () => 'Precipitation identifier sensor not available'
+    },
+    {
+      pattern: /FRQ/,
+      type: 'frq-lightning',
+      icon: null,
+      color: 'text-orange-400',
+      bgColor: 'bg-orange-500/20 border-orange-500/30',
+      decode: () => 'Frequent'
+    },
+    {
+      pattern: /LTG/,
+      type: 'lightning',
+      icon: null,
+      color: 'text-amber-400',
+      bgColor: 'bg-amber-500/20 border-amber-500/30',
+      decode: () => 'Lightning detected'
     },
     {
       pattern: /^[A-Z]{4}$/,
@@ -63,7 +103,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
     {
       pattern: /\d{6}Z/,
       type: 'time',
-      icon: null,
+      icon: Clock,
       color: 'text-purple-400',
       bgColor: 'bg-purple-500/20 border-purple-500/30',
       decode: (match: string) => {
@@ -146,12 +186,23 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
     {
       pattern: /A\d{4}/,
       type: 'altimeter',
-      icon: null,
+      icon: Gauge,
       color: 'text-orange-400',
       bgColor: 'bg-orange-500/20 border-orange-500/30',
       decode: (match: string) => {
         const pressure = (parseInt(match.slice(1)) / 100).toFixed(2);
         return `Altimeter: ${pressure} inHg`;
+      }
+    },
+      {
+      pattern: /P\d{4}/,
+      type: 'percip-rate',
+      icon: null,
+      color: 'text-lime-400',
+      bgColor: 'bg-lime-500/20 border-lime-500/30',
+      decode: (match: string) => {
+        const pressure = (parseInt(match.slice(1)) / 100).toFixed(2);
+        return `Hourly Precipitation Rate: ${pressure} inches`;
       }
     },
     {
