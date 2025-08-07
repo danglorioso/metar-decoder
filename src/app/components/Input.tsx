@@ -146,6 +146,8 @@ export default function MetarInput({ metarObject, setMetarObject }: InputProps) 
                         Airport Code (ICAO)
                         </label>
                         <div className="flex gap-3">
+
+                        {/* ICAO Input */}
                         <input
                             type="text"
                             value={icao}
@@ -159,6 +161,8 @@ export default function MetarInput({ metarObject, setMetarObject }: InputProps) 
                             placeholder="KBOS"
                             maxLength={4} // ICAO codes are 4 chars
                         />
+
+                        {/* Fetch Button */}
                         <button
                             onClick={fetchMetar}
                             disabled={loading || airportDataLoading || !canFetch}
@@ -169,7 +173,7 @@ export default function MetarInput({ metarObject, setMetarObject }: InputProps) 
                         </button>
                         </div>
 
-                        {/* Airport info display */}
+                        {/* Invalid ICAO error message */}
                         {icao && icao.length === 4 && !airportDataLoading && !validateIcaoCode(icao, airportsByIcao) && (
                             <div className="mt-2">
                                 <div className="text-red-400 text-sm">
@@ -178,7 +182,7 @@ export default function MetarInput({ metarObject, setMetarObject }: InputProps) 
                             </div>
                         )}
                         
-                        {/* Fetch error display */}
+                        {/* Fetch error */}
                         {fetchError && (
                             <div className="mt-2">
                                 <div className="text-red-400 text-sm">
