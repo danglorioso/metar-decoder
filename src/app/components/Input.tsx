@@ -15,6 +15,7 @@ export default function MetarInput({ metarObject, setMetarObject }: InputProps) 
     const [icao, setICAO] = useState('');
     const [loading, setLoading] = useState(false);
     const [metarText, setMetarText] = useState('');
+    const [fetchError, setFetchError] = useState('');
     
     // Load airport data
     const { airportsByIcao, isLoading: airportDataLoading, error: airportDataError } = useAirportData();
@@ -68,8 +69,10 @@ export default function MetarInput({ metarObject, setMetarObject }: InputProps) 
         setMetarObject(customMetarObject);
     }
 
+    // Called when "Fetch" button is clicked
     async function fetchMetar() {
         setLoading(true);
+        setFetchError(''); // Clear any previous errors
 
         try {
             const response = await fetch(`/api/fetchMetar?icao=${icao}`);
@@ -81,19 +84,18 @@ export default function MetarInput({ metarObject, setMetarObject }: InputProps) 
 
             // Retrieve data and set METAR
             const data = await response.json();
-            console.log("Fetched METAR data:", data);
 
             // Check if data is valid and contains METAR
             if (!Array.isArray(data) || data.length === 0 || !data[0].rawOb) {
-                console.error("No valid METAR found in data:", data);
-                // setMetarText("No METAR found");
+                setFetchError('No METAR data available for this airport');
                 setMetarObject(null);
             } else {
                 setMetarObject(data[0]);
-                // setMetarText(data[0].rawOb);
             }
         } catch (error) {
             console.error('Error', error);
+            setFetchError('Unable to fetch METAR data. Please try again.');
+            setMetarObject(null);
         }
         setLoading(false);
     }
@@ -172,6 +174,15 @@ export default function MetarInput({ metarObject, setMetarObject }: InputProps) 
                             <div className="mt-2">
                                 <div className="text-red-400 text-sm">
                                     ICAO code not found.
+                                </div>
+                            </div>
+                        )}
+                        
+                        {/* Fetch error display */}
+                        {fetchError && (
+                            <div className="mt-2">
+                                <div className="text-red-400 text-sm">
+                                    {fetchError}
                                 </div>
                             </div>
                         )}
