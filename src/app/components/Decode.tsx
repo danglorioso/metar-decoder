@@ -77,6 +77,14 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       decode: () => 'Frequent'
     },
     {
+      pattern: /PNO/,
+      type: 'percip-amt-no',
+      icon: null,
+      color: 'text-sky-400',
+      bgColor: 'bg-sky-500/20 border-sky-500/30',
+      decode: () => 'Percipitation amount not available'
+    },
+    {
       pattern: /LTG/,
       type: 'lightning',
       icon: null,
