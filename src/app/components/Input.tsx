@@ -148,6 +148,11 @@ export default function MetarInput({ metarObject, setMetarObject }: InputProps) 
                             type="text"
                             value={icao}
                             onChange={(e) => setICAO(e.target.value.toUpperCase())}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' && canFetch && !loading && !airportDataLoading) {
+                                    fetchMetar();
+                                }
+                            }}
                             className="flex-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-gray-400"
                             placeholder="KBOS"
                             maxLength={4} // ICAO codes are 4 chars
