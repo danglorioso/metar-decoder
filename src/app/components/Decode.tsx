@@ -36,7 +36,11 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       bgColor: 'bg-blue-500/20 border-blue-500/30',
       decode: (match: string) => {
         const minutes = parseInt(match.slice(3));
-        return `Rain began ${minutes} minutes after the hour`;
+        if (minutes == 1) {
+          return 'Rain began 1 minute after the hour';
+        } else {
+          return `Rain began ${minutes} minutes after the hour`;
+        }
       }
     },
     {
