@@ -142,8 +142,8 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       pattern: /SLP\d{3}|SLPNO/,
       type: 'slp',
       icon: null,
-      color: 'text-gray-400',
-      bgColor: 'bg-gray-500/20 border-gray-500/30',
+      color: 'text-teal-400',
+      bgColor: 'bg-teal-500/20 border-teal-500/30',
       decode: (match: string) => {
         if (match === 'SLPNO') {
           return 'Sea-level pressure not available';
@@ -166,5 +166,28 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
         return `Sea-level pressure: ${actualPressure.toFixed(1)} hPa`;
       }
     },
+    {
+      pattern: /T[01]\d{3}[01]\d{3}/,
+      type: 'precise-temp',
+      icon: Thermometer,
+      color: 'text-red-400',
+      bgColor: 'bg-red-500/20 border-red-500/30',
+      decode: (match: string) => {
+        // Format: T + 4 digits temp + 4 digits dewpoint
+        const tempBlock = match.slice(1, 5); // First 4 digits after T
+        const dewBlock = match.slice(5, 9);  // Last 4 digits
+        
+        // Decode temperature
+        const tempSign = tempBlock[0] === '0' ? 1 : -1;
+        const tempValue = (parseInt(tempBlock.slice(1)) / 10) * tempSign;
+        
+        // Decode dewpoint
+        const dewSign = dewBlock[0] === '0' ? 1 : -1;
+        const dewValue = (parseInt(dewBlock.slice(1)) / 10) * dewSign;
+        
+        return `Precise temperature: ${tempValue.toFixed(1)}°C, dewpoint: ${dewValue.toFixed(1)}°C`;
+      }
+    },
+
   ];
 };
