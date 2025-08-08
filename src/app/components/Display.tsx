@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MetarWord } from './Word';
 import { getMetarPatterns } from './Decode';
 import { Copy, Eye } from 'lucide-react';
@@ -14,6 +14,7 @@ type DisplayProps = {
 export default function Display({ metarObject }: DisplayProps) {
     // useStates
     const [showFullTranslation, setShowFullTranslation] = useState(false);
+    const [fullTranslation, setFullTranslation] = useState('');
     const metarText = metarObject ? metarObject.rawOb : '';
     
     // Load airport data
@@ -50,8 +51,17 @@ export default function Display({ metarObject }: DisplayProps) {
         }
         });
         
-        return translation.join('. ') + '.';
+        const full_translation = translation.join('. ') +'.';
+        return full_translation;
     };
+
+    // Generate translation when metarText changes
+    useEffect(() => {
+        if (metarText) {
+            const translation = generateFullTranslation();
+            setFullTranslation(translation);
+        }
+    }, [metarText, metarPatterns]);
 
     return (
         <div className="max-w-6xl mx-auto px-6">
@@ -61,7 +71,7 @@ export default function Display({ metarObject }: DisplayProps) {
                     <div>
                         <h2 className="text-2xl font-semibold text-white flex items-center gap-3">
                             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                            Live METAR Report
+                            Latest METAR Report
                         </h2>
                         <div className="text-gray-400 text-sm mt-1">
                             <span className="font-semibold">Last updated:</span> {metarObject ? new Date(metarObject.reportTime).toLocaleString() + ' UTC' : 'No METAR data available'}
@@ -73,7 +83,7 @@ export default function Display({ metarObject }: DisplayProps) {
                         className="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 border border-gray-600 rounded-lg transition-colors duration-200 flex items-center gap-2 text-gray-300"
                     >
                         <Copy className="w-4 h-4" />
-                        Copy
+                        Copy raw
                     </button>
                     <button
                         onClick={() => setShowFullTranslation(!showFullTranslation)}
@@ -102,19 +112,31 @@ export default function Display({ metarObject }: DisplayProps) {
                 {/* Tooltip legend */}
                 <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
                     <div className="w-4 h-4 bg-blue-500/20 border border-blue-500/30 rounded"></div>
-                    <span>Hover over highlighted elements for detailed explanations</span>
+                    <span>Hover over highlighted words for detailed explanations</span>
                 </div>
 
                 {/* Optional Translation */}
                 {showFullTranslation && (
                     <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-6">
-                    <h3 className="font-semibold text-blue-400 mb-3 flex items-center gap-2">
-                        <Eye className="w-5 h-5" />
-                        Human-Readable Translation
+                    <h3 className="font-semibold text-blue-400 mb-3 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <Eye className="w-5 h-5" />
+                            Human-Readable Translation
+                        </div>
+                        
+                        {/* Copy button */}
+                        <button
+                            onClick={() => navigator.clipboard.writeText(fullTranslation)}
+                            className="px-4 py-1 text-sm bg-gray-700 hover:bg-gray-600 border border-gray-600 rounded-lg transition-colors duration-200 flex items-center gap-2 text-gray-300"
+                        >
+                            <Copy className="w-4 h-4" />
+                            Copy translation
+                        </button>
                     </h3>
                     <p className="text-gray-300 leading-relaxed text-lg">
-                        {generateFullTranslation()}
+                        {fullTranslation}
                     </p>
+                    
                     </div>
                 )}
             </div>
