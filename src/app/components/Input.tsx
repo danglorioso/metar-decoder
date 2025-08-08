@@ -151,7 +151,13 @@ export default function MetarInput({ metarObject, setMetarObject }: InputProps) 
                         <input
                             type="text"
                             value={icao}
-                            onChange={(e) => setICAO(e.target.value.toUpperCase())}
+                            onChange={(e) => {
+                                setICAO(e.target.value.toUpperCase());
+                                // Reset fetch error when user changes input
+                                if (fetchError) {
+                                    setFetchError('');
+                                }
+                            }}
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter' && canFetch && !loading && !airportDataLoading) {
                                     fetchMetar();
