@@ -38,14 +38,15 @@ export default function Reference() {
                     <div className="space-y-4">
                         <h4 className="font-medium text-green-400 flex items-center gap-2 mb-4">
                             <Wind className="w-4 h-4" />
-                            Common Abbreviations
+                            Common Units
                         </h4>
                         <div className="space-y-3">
                             {[
                             { code: 'KT', desc: 'Knots (wind speed)', color: 'text-green-400' },
                             { code: 'SM', desc: 'Statute Miles (visibility)', color: 'text-yellow-400' },
+                            { code: 'hPa', desc: 'Hectopascals (pressure)', color: 'text-red-400' },
                             { code: 'Z', desc: 'Zulu (UTC) Time', color: 'text-purple-400' },
-                            { code: 'RMK', desc: 'Remarks section', color: 'text-gray-400' }
+                            // { code: 'RMK', desc: 'Remarks section', color: 'text-gray-400' }
                             ].map(item => (
                             <div key={item.code} className="flex items-center gap-3">
                                 <span className={`font-mono bg-gray-700 px-2 py-1 rounded text-sm ${item.color}`}>

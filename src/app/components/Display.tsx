@@ -118,16 +118,16 @@ export default function Display({ metarObject }: DisplayProps) {
                 {/* Optional Translation */}
                 {showFullTranslation && (
                     <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-6">
-                    <h3 className="font-semibold text-blue-400 mb-3 flex items-center justify-between">
+                    <h3 className="font-semibold text-blue-400 mb-4 flex items-center justify-between">
                         <div className="flex items-center gap-2">
                             <Eye className="w-5 h-5" />
-                            Human-Readable Translation
+                            <div className="text-lg">Human-Readable Translation</div>
                         </div>
                         
                         {/* Copy button */}
                         <button
                             onClick={() => navigator.clipboard.writeText(fullTranslation)}
-                            className="px-4 py-1 text-sm bg-gray-700 hover:bg-gray-600 border border-gray-600 rounded-lg transition-colors duration-200 flex items-center gap-2 text-gray-300"
+                            className="px-4 py-2 text-sm font-normal bg-gray-700 hover:bg-gray-600 border border-gray-600 rounded-lg transition-colors duration-200 flex items-center gap-2 text-gray-300"
                         >
                             <Copy className="w-4 h-4" />
                             Copy translation
