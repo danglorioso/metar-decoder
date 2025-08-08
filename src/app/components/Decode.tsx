@@ -29,6 +29,14 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       decode: () => 'Smoke'
     },
     {
+      pattern: /\bSH\b/,
+      type: 'showers',
+      icon: CloudRainWind,
+      color: 'text-blue-400',
+      bgColor: 'bg-blue-500/20 border-blue-500/30',
+      decode: () => 'Showers'
+    },
+    {
       pattern: /RAB\d{2}/,
       type: 'rain-began',
       icon: CloudRainWind,
@@ -474,8 +482,8 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       pattern: /\bMOV\b/,
       type: 'moving',
       icon: null,
-      color: 'text-rose-400',
-      bgColor: 'bg-rose-500/20 border-rose-500/30',
+      color: 'text-emerald-400',
+      bgColor: 'bg-emerald-500/20 border-emerald-500/30',
       decode: () => 'Moving'
     },
     {
@@ -485,6 +493,22 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       color: 'text-orange-400',
       bgColor: 'bg-orange-500/20 border-orange-500/30',
       decode: () => 'Distant'
+    },
+    {
+      pattern: /\bSTNRY\b/,
+      type: 'stationary',
+      icon: null,
+      color: 'text-orange-400',
+      bgColor: 'bg-orange-500/20 border-orange-500/30',
+      decode: () => 'Stationary'
+    },
+    {
+      pattern: /\bCHINO\b/,
+      type: 'chino',
+      icon: null,
+      color: 'text-sky-400',
+      bgColor: 'bg-sky-500/20 border-sky-500/30',
+      decode: () => 'Sky conditions at secondary location not available'
     },
     {
       pattern: /\bVC\b/,
@@ -517,6 +541,14 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       color: 'text-green-400',
       bgColor: 'bg-green-500/20 border-green-500/30',
       decode: () => 'Occasional'
+    },
+    {
+      pattern: /\bCONS\b/,
+      type: 'continuous',
+      icon: null,
+      color: 'text-emerald-400',
+      bgColor: 'bg-emerald-500/20 border-emerald-500/30',
+      decode: () => 'Continuous'
     },
     {
       pattern: /OBSC[GNEWSAL]+/,
@@ -557,6 +589,14 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       color: 'text-amber-400',
       bgColor: 'bg-red-500/20 border-red-500/30',
       decode: () => 'Correction to a previously disseminated observation'
+    },
+   {
+      pattern: /\bNOSIG\b/,
+      type: 'no-change',
+      icon: null,
+      color: 'text-blue-400',
+      bgColor: 'bg-blue-500/20 border-blue-500/30',
+      decode: () => 'No significant change'
     },
     {
       pattern: /^[A-Z]{4}$/,
