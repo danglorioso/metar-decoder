@@ -256,6 +256,14 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       decode: () => 'Fog'
     },
     {
+      pattern: /\bBNK\b/,
+      type: 'bank',
+      icon: null,
+      color: 'text-stone-400',
+      bgColor: 'bg-stone-500/20 border-stone-500/30',
+      decode: () => 'Bank'
+    },
+    {
       pattern: /\bCB\b/,
       type: 'cumulonimbus',
       icon: null,
