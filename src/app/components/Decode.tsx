@@ -802,6 +802,36 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       }
     },
     {
+      pattern: /1[01]\d{3}/,
+      type: '6hr-max-temp',
+      icon: Thermometer,
+      color: 'text-red-400',
+      bgColor: 'bg-red-500/20 border-red-500/30',
+      decode: (match: string) => {
+        const signDigit = match[1];
+        const tempDigits = match.slice(2);
+        const sign = signDigit === '0' ? 1 : -1;
+        const tempValue = (parseInt(tempDigits) / 10) * sign;
+        
+        return `6-hour maximum temperature: ${tempValue.toFixed(1)}°C`;
+      }
+    },
+    {
+      pattern: /2[01]\d{3}/,
+      type: '6hr-min-temp',
+      icon: Thermometer,
+      color: 'text-blue-400',
+      bgColor: 'bg-blue-500/20 border-blue-500/30',
+      decode: (match: string) => {
+        const signDigit = match[1];
+        const tempDigits = match.slice(2);
+        const sign = signDigit === '0' ? 1 : -1;
+        const tempValue = (parseInt(tempDigits) / 10) * sign;
+        
+        return `6-hour minimum temperature: ${tempValue.toFixed(1)}°C`;
+      }
+    },
+    {
       pattern: /\$$/,
       type: 'maintenance',
       icon: null,
