@@ -101,7 +101,7 @@ export default function MetarInput({ metarObject, setMetarObject }: InputProps) 
     }
 
     return (
-        <div className="max-w-6xl mx-auto px-6 py-8">
+        <div className="max-w-6xl mx-auto md:px-6 py-8">
             <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl p-6">
                 <div className="flex flex-col lg:flex-row gap-6">
                     {/* Mode Selection */}
