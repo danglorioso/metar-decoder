@@ -57,6 +57,27 @@ export default function Reference() {
                             ))}
                         </div>
                     </div>
+
+                    <div className="space-y-4">
+                        <h4 className="font-medium text-blue-400 flex items-center gap-2 mb-4">
+                            <CloudSnow className="w-4 h-4" />
+                            Prefixes
+                        </h4>
+                        <div className="space-y-3">
+                            {[
+                            { code: '-', desc: 'Light', color: 'text-cyan-400' },
+                            { code: '', desc: 'Moderate', color: 'text-cyan-400' },
+                            { code: '+', desc: 'Heavy', color: 'text-cyan-400' },
+                            ].map(item => (
+                            <div key={item.code} className="flex items-center gap-3">
+                                <span className={`font-mono bg-gray-700 px-2 py-1 rounded text-sm ${item.color}`}>
+                                {item.code}
+                                </span>
+                                <span className="text-gray-300">{item.desc}</span>
+                            </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
