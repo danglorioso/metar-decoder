@@ -1,4 +1,5 @@
 import { Plane, Wind, Eye, CloudSnow, Thermometer, Gauge, Clock, CloudRainWind, Waves, CircleAlert, NotebookPen, Droplet, Snowflake, Zap, CloudHail, CircleGauge } from 'lucide-react';
+import { validateIcaoCode } from '@/app/hooks/useAirportData';
 
 // Define the Airport type locally to avoid circular dependencies
 interface Airport {
@@ -605,13 +606,17 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       color: 'text-blue-400',
       bgColor: 'bg-blue-500/20 border-blue-500/30',
       decode: (match: string) => {
-        if (airportsByIcao) {
+        // Only decode if it's a valid ICAO code in database
+        if (airportsByIcao && validateIcaoCode(match, airportsByIcao)) {
           const airport = airportsByIcao.get(match);
           if (airport) {
             return `Airport: ${airport.name} (${match}) - ${airport.city}, ${airport.country}`;
           }
+          return `Airport: ${match} (ICAO identifier)`;
         }
-        return `Airport: ${match} (ICAO identifier)`;
+        
+        // Return null if not a valid ICAO code, so it won't be highlighted
+        return null;
       }
     },
     {

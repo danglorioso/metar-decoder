@@ -11,7 +11,7 @@ export default function Reference() {
                     Quick Reference Guide
                 </h3>
                 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div className="space-y-4">
                     <h4 className="font-medium text-blue-400 flex items-center gap-2 mb-4">
                         <CloudSnow className="w-4 h-4" />

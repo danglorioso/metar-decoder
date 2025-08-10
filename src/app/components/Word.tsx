@@ -10,7 +10,7 @@ type WordProps = {
     icon: React.ComponentType<any> | null;
     color: string;
     bgColor: string;
-    decode: (match: string) => string;
+    decode: (match: string) => string | null;
   }>;
 }
 
@@ -19,14 +19,18 @@ export const MetarWord = ({ word, index, metarPatterns }: WordProps) => {
     for (let pattern of metarPatterns) {
       const match = part.match(pattern.pattern);
       if (match) {
-        return {
-          type: pattern.type,
-          icon: pattern.icon,
-          color: pattern.color,
-          bgColor: pattern.bgColor,
-          explanation: pattern.decode(match[0]),
-          matched: match[0]
-        };
+        const explanation = pattern.decode(match[0]);
+        // Only return decoded object if explanation is not null
+        if (explanation !== null) {
+          return {
+            type: pattern.type,
+            icon: pattern.icon,
+            color: pattern.color,
+            bgColor: pattern.bgColor,
+            explanation: explanation,
+            matched: match[0]
+          };
+        }
       }
     }
     return null;

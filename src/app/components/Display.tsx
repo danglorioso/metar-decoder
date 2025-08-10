@@ -32,7 +32,7 @@ export default function Display({ metarObject }: DisplayProps) {
                 const match = part.match(pattern.pattern);
                 if (match) {
                     return {
-                        explanation: pattern.decode(match[0]),
+                        explanation: pattern.decode(match[0]) ?? '',
                     };
                 }
             }
