@@ -8,7 +8,8 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        'aero-chart': "url('/aero-chart.png')",
+        'aero-chart': "url('/aero-chart.webp')",
+        'aero-chart-fallback': "url('/aero-chart.png')",
       }
     },
   },

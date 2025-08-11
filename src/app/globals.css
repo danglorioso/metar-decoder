@@ -26,3 +26,12 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* WebP support detection and fallback */
+.bg-aero-chart {
+  background-image: url('/aero-chart.png'); /* Fallback for browsers without WebP support */
+}
+
+.webp .bg-aero-chart {
+  background-image: url('/aero-chart.webp'); /* WebP version for supported browsers */
+}
