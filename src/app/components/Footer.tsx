@@ -25,6 +25,9 @@ export default function Footer() {
             </p>
           </div>
 
+          {/* Divider */}
+          <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent"></div>
+
           {/* Disclaimer */}
           <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4 max-w-5xl">
             <p className="text-amber-200/90 text-xs md:text-sm text-center leading-relaxed">
@@ -33,12 +36,12 @@ export default function Footer() {
           </div>
 
           {/* Divider */}
-          <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent"></div>
+          {/* <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent"></div> */}
           
           {/* Additional info */}
-          <p className="text-gray-500 text-xs text-center">
+          {/* <p className="text-gray-500 text-xs text-center">
             METAR decoder for educational and informational purposes.
-          </p>
+          </p> */}
         </div>
       </div>
     </footer>
