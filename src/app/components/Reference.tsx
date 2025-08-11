@@ -68,6 +68,7 @@ export default function Reference() {
                             { code: '-', desc: 'Light', color: 'text-cyan-400' },
                             { code: '', desc: 'Moderate', color: 'text-cyan-400' },
                             { code: '+', desc: 'Heavy', color: 'text-cyan-400' },
+                            { code: 'VC', desc: 'In the vicinity (5-10SM of station)', color: 'text-cyan-400' },
                             ].map(item => (
                             <div key={item.code} className="flex items-center gap-3">
                                 <span className={`font-mono bg-gray-700 px-2 py-1 rounded text-sm ${item.color}`}>
