@@ -754,6 +754,14 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
         }
       }
     },
+    {
+      pattern: /\bTSNO\b/,
+      type: 'thunderstorm-no',
+      icon: null,
+      color: 'text-amber-400',
+      bgColor: 'bg-amber-500/20 border-amber-500/30',
+      decode: () => 'Thunderstorm information not available'
+    },
 
     // *** Lightning *** 
         {
@@ -1045,6 +1053,14 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
     {
       pattern: /\bMOV\b/,
       type: 'moving',
+      icon: null,
+      color: 'text-emerald-400',
+      bgColor: 'bg-emerald-500/20 border-emerald-500/30',
+      decode: () => 'Moving'
+    },
+    {
+      pattern: /\bMOVG\b/,
+      type: 'movg',
       icon: null,
       color: 'text-emerald-400',
       bgColor: 'bg-emerald-500/20 border-emerald-500/30',
