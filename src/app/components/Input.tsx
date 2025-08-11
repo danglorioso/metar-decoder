@@ -109,7 +109,7 @@ export default function MetarInput({ metarObject, setMetarObject }: InputProps) 
                         <label className="block text-sm font-semibold text-gray-300 mb-3">
                             Input Mode
                         </label>
-                        <div className="flex gap-2">
+                        <div className="flex flex-col sm:flex-row gap-2">
                             <button
                                 onClick={() => setCustomMode(false)}
                                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
@@ -118,7 +118,7 @@ export default function MetarInput({ metarObject, setMetarObject }: InputProps) 
                                     : 'bg-gray-700 text-gray-300 border border-gray-600 hover:bg-gray-600'
                                 }`}
                                 >
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center justify-center gap-2">
                                     <Search className="w-4 h-4" />
                                     Airport Lookup
                                 </div>
@@ -131,7 +131,7 @@ export default function MetarInput({ metarObject, setMetarObject }: InputProps) 
                                     : 'bg-gray-700 text-gray-300 border border-gray-600 hover:bg-gray-600'
                                 }`}
                                 >
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center justify-center gap-2">
                                     <Copy className="w-4 h-4" />
                                     Custom METAR
                                 </div>
