@@ -1,4 +1,4 @@
-import { Plane, Wind, Eye, CloudSnow, Thermometer, Gauge, Clock, CloudRainWind, Waves, CircleAlert, NotebookPen, Droplet, Snowflake, Zap, CloudHail, CircleGauge } from 'lucide-react';
+import { Plane, Wind, Eye, CloudSnow, Thermometer, Gauge, Clock, CloudRainWind, Waves, CircleAlert, NotebookPen, Droplet, Snowflake, Zap, CloudHail, CircleGauge, Tornado } from 'lucide-react';
 import { validateIcaoCode } from '@/app/hooks/useAirportData';
 
 // Define the Airport type locally to avoid circular dependencies
@@ -376,6 +376,124 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       }
     },
     {
+      pattern: /(?:^|(?<=\s))(VC)?[-+]?SQ(?=\s|$)/,
+      type: 'squall',
+      icon: Wind,
+      color: 'text-blue-400',
+      bgColor: 'bg-blue-500/20 border-blue-500/30',
+      decode: (match: string) => {
+        const isVicinity = match.startsWith('VC');
+        const squallPart = isVicinity ? match.slice(2) : match;
+        
+        let intensity = '';
+        if (squallPart.startsWith('-')) {
+          intensity = 'Light ';
+        } else if (squallPart.startsWith('+')) {
+          intensity = 'Heavy ';
+        } else {
+          intensity = 'Moderate ';
+        }
+        
+        const vicinitySuffix = isVicinity ? ' in the vicinity ' : '';
+        return `${intensity}squalls${vicinitySuffix}`;
+      }
+    },
+    {
+      pattern: /(?:^|(?<=\s))(VC)?[-+]?DS(?=\s|$)/,
+      type: 'duststorm',
+      icon: Tornado,
+      color: 'text-blue-400',
+      bgColor: 'bg-blue-500/20 border-blue-500/30',
+      decode: (match: string) => {
+        const isVicinity = match.startsWith('VC');
+        const squallPart = isVicinity ? match.slice(2) : match;
+        
+        let intensity = '';
+        if (squallPart.startsWith('-')) {
+          intensity = 'Light ';
+        } else if (squallPart.startsWith('+')) {
+          intensity = 'Heavy ';
+        } else {
+          intensity = 'Moderate ';
+        }
+        
+        const vicinitySuffix = isVicinity ? ' in the vicinity ' : '';
+        return `${intensity}duststorm${vicinitySuffix}`;
+      }
+    },
+    {
+      pattern: /(?:^|(?<=\s))(VC)?[-+]?SS(?=\s|$)/,
+      type: 'sandstorm',
+      icon: Tornado,
+      color: 'text-blue-400',
+      bgColor: 'bg-blue-500/20 border-blue-500/30',
+      decode: (match: string) => {
+        const isVicinity = match.startsWith('VC');
+        const squallPart = isVicinity ? match.slice(2) : match;
+        
+        let intensity = '';
+        if (squallPart.startsWith('-')) {
+          intensity = 'Light ';
+        } else if (squallPart.startsWith('+')) {
+          intensity = 'Heavy ';
+        } else {
+          intensity = 'Moderate ';
+        }
+        
+        const vicinitySuffix = isVicinity ? ' in the vicinity ' : '';
+        return `${intensity}sandstorm${vicinitySuffix}`;
+      }
+    },
+    {
+      pattern: /(?:^|(?<=\s))(VC)?[-+]?PO(?=\s|$)/,
+      type: 'sand-whirls',
+      icon: Tornado,
+      color: 'text-blue-400',
+      bgColor: 'bg-blue-500/20 border-blue-500/30',
+      decode: (match: string) => {
+        const isVicinity = match.startsWith('VC');
+        const squallPart = isVicinity ? match.slice(2) : match;
+        
+        let intensity = '';
+        if (squallPart.startsWith('-')) {
+          intensity = 'Light ';
+        } else if (squallPart.startsWith('+')) {
+          intensity = 'Heavy ';
+        } else {
+          intensity = 'Moderate ';
+        }
+        
+        const vicinitySuffix = isVicinity ? ' in the vicinity ' : '';
+        return `${intensity}dust/sand whirls${vicinitySuffix}`;
+      }
+    },
+    {
+      pattern: /(?:^|(?<=\s))(VC)?[-+]?FC(?=\s|$)/,
+      type: 'funnel-cloud',
+      icon: Tornado,
+      color: 'text-blue-400',
+      bgColor: 'bg-blue-500/20 border-blue-500/30',
+      decode: (match: string) => {
+        const isVicinity = match.startsWith('VC');
+        const squallPart = isVicinity ? match.slice(2) : match;
+        let tornado = false;
+        
+        let intensity = '';
+        if (squallPart.startsWith('-')) {
+          intensity = 'Light ';
+        } else if (squallPart.startsWith('+')) {
+          intensity = 'Heavy ';
+          const vicinitySuffix = isVicinity ? ' in the vicinity ' : '';
+          return `Tornado${vicinitySuffix}`;
+        } else {
+          intensity = 'Moderate ';
+        }
+        
+        const vicinitySuffix = isVicinity ? ' in the vicinity ' : '';
+        return `${intensity}funnel clouds${vicinitySuffix}`;
+      }
+    },
+    {
       pattern: /\bUP\b/,
       type: 'unknown-perc',
       icon: CloudRainWind,
@@ -383,6 +501,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       bgColor: 'bg-blue-500/20 border-blue-500/30',
       decode: () => 'Unknown percipitation'
     },
+
     // TODO: add this as a prefix for rain
     {
       pattern: /\bSH\b/,
@@ -483,34 +602,94 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
     },
 
     // *** Thunderstorm Events ***
+    //     {
+    //   pattern: /(?:^|(?<=\s))(VC)?[-+]?SS(?=\s|$)/,
+    //   type: 'sandstorm',
+    //   icon: Tornado,
+    //   color: 'text-blue-400',
+    //   bgColor: 'bg-blue-500/20 border-blue-500/30',
+    //   decode: (match: string) => {
+    //     const isVicinity = match.startsWith('VC');
+    //     const squallPart = isVicinity ? match.slice(2) : match;
+        
+    //     let intensity = '';
+    //     if (squallPart.startsWith('-')) {
+    //       intensity = 'Light ';
+    //     } else if (squallPart.startsWith('+')) {
+    //       intensity = 'Heavy ';
+    //     } else {
+    //       intensity = 'Moderate ';
+    //     }
+        
+    //     const vicinitySuffix = isVicinity ? ' in the vicinity ' : '';
+    //     return `${intensity}sandstorm${vicinitySuffix}`;
+    //   }
+    // },
     {
-      pattern: /(?:^|(?<=\s))[-+]?TS(RA)?(?=\s|$)/,
+      pattern: /(?:^|(?<=\s))(VC)?[-+]?TS([-+]?RA)?(?=\s|$)/,
       type: 'thunderstorm',
       icon: Zap,
       color: 'text-orange-400',
       bgColor: 'bg-orange-500/20 border-orange-500/30',
       decode: (match: string) => {
-        let intensity = '';
+        const isVicinity = match.startsWith('VC');
+        const thunderstormPart = isVicinity ? match.slice(2) : match;
+        
+        let thunderstormIntensity = '';
+        let rainIntensity = '';
         let hasRain = false;
         
-        // Check for intensity prefix
-        if (match.startsWith('-')) {
-          intensity = 'Light ';
-        } else if (match.startsWith('+')) {
-          intensity = 'Heavy';
+        // Check if there's rain and extract intensities
+        if (thunderstormPart.includes('RA')) {
+          hasRain = true;
+          
+          // Find where RA starts
+          const raIndex = thunderstormPart.indexOf('RA');
+          const beforeRA = thunderstormPart.substring(0, raIndex);
+          const raWithModifier = thunderstormPart.substring(raIndex - 1); // Include potential modifier before RA
+          
+          // Check for thunderstorm intensity (before TS)
+          if (beforeRA.startsWith('-TS')) {
+            thunderstormIntensity = 'light ';
+          } else if (beforeRA.startsWith('+TS')) {
+            thunderstormIntensity = 'heavy ';
+          } else {
+            thunderstormIntensity = ''; // No intensity = moderate
+          }
+          
+          // Check for rain intensity (before RA)
+          if (raWithModifier.startsWith('-RA')) {
+            rainIntensity = 'light ';
+          } else if (raWithModifier.startsWith('+RA')) {
+            rainIntensity = 'heavy ';
+          } else {
+            rainIntensity = 'moderate ';
+          }
         } else {
-          intensity = 'Moderate';
+          // No rain, check thunderstorm intensity
+          if (thunderstormPart.startsWith('-TS')) {
+            thunderstormIntensity = 'light ';
+          } else if (thunderstormPart.startsWith('+TS')) {
+            thunderstormIntensity = 'heavy ';
+          } else {
+            thunderstormIntensity = ''; // No intensity = moderate
+          }
         }
         
-        // Check for rain
-        if (match.includes('RA')) {
-          hasRain = true;
-        }
+        const vicinityPrefix = isVicinity ? ' in the vicinity ' : '';
         
         if (hasRain) {
-          return `${intensity} thunderstorm with rain`;
+          if (thunderstormIntensity) {
+            return `${thunderstormIntensity.charAt(0).toUpperCase() + thunderstormIntensity.slice(1)}thunderstorm with ${rainIntensity}rain${vicinityPrefix}`;
+          } else {
+            return `Thunderstorm with ${rainIntensity}rain${vicinityPrefix}`;
+          }
         } else {
-          return `${intensity} thunderstorm`;
+          if (thunderstormIntensity) {
+            return `${thunderstormIntensity.charAt(0).toUpperCase() + thunderstormIntensity.slice(1)}thunderstorm${vicinityPrefix}`;
+          } else {
+            return `Thunderstorm${vicinityPrefix}`;
+          }
         }
       }
     },
