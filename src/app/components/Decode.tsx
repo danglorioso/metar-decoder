@@ -1,4 +1,25 @@
-import { Plane, Wind, Eye, CloudSnow, Thermometer, Gauge, Clock, CloudRainWind, Waves, CircleAlert, NotebookPen, Droplet, Snowflake, Zap, CloudHail, CircleGauge, Tornado } from 'lucide-react';
+import {
+  Plane,
+  Wind,
+  Eye,
+  CloudSnow,
+  Thermometer,
+  Gauge,
+  Clock,
+  CloudRainWind,
+  Waves,
+  CircleAlert,
+  NotebookPen,
+  Droplet,
+  Snowflake,
+  Zap,
+  CloudHail,
+  CircleGauge,
+  Tornado,
+  CloudAlert,
+  PlaneLanding
+} from 'lucide-react';
+
 import { validateIcaoCode } from '@/app/hooks/useAirportData';
 
 // Define the Airport type locally to avoid circular dependencies
@@ -87,6 +108,28 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       bgColor: 'bg-red-500/20 border-red-500/30',
       decode: () => 'Correction to a previously disseminated observation'
     },
+    {
+      pattern: /\bRWY\d{2}[LCR]?\b/,
+      type: 'runway',
+      icon: PlaneLanding,
+      color: 'text-amber-400',
+      bgColor: 'bg-amber-500/20 border-amber-500/30',
+      decode: (match: string) => {
+        const runwayNum = match.slice(3, 5);
+        const dir = match.slice(5, 6); // Get the optional L/C/R character
+        
+        let dirName = '';
+        if (dir === 'L') {
+          dirName = ' Left';
+        } else if (dir === 'C') {
+          dirName = ' Center';
+        } else if (dir === 'R') {
+          dirName = ' Right';
+        }
+        
+        return `Runway ${runwayNum}${dirName}`;
+      }
+    },
 
     // *** Temperature ***
     {
@@ -130,7 +173,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       }
     },
     {
-      pattern: /1[01]\d{3}/,
+      pattern: /(?:^|(?<=\s))1[01]\d{3}(?=\s|$)/,
       type: '6hr-max-temp',
       icon: Thermometer,
       color: 'text-red-400',
@@ -145,7 +188,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       }
     },
     {
-      pattern: /2[01]\d{3}/,
+      pattern: /(?:^|(?<=\s))2[01]\d{3}(?=\s|$)/,
       type: '6hr-min-temp',
       icon: Thermometer,
       color: 'text-blue-400',
@@ -160,7 +203,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       }
     },
     {
-      pattern: /4[01]\d{3}[01]\d{3}/,
+      pattern: /(?:^|(?<=\s))4[01]\d{3}[01]\d{3}(?=\s|$)/,
       type: '24hr-min-max-temp',
       icon: Thermometer,
       color: 'text-blue-400',
@@ -851,6 +894,14 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
         }
       }
     },
+    {
+      pattern: /\bVA\b/,
+      type: 'volcanic-ash',
+      icon: CloudAlert,
+      color: 'text-red-400',
+      bgColor: 'bg-red-500/20 border-red-500/30',
+      decode: () => 'Volcanic ash'
+    },
 
     // *** Direction ***
     {
@@ -961,6 +1012,38 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       decode: () => 'Altocumulus standing lenticular clouds'
     },
     {
+      pattern: /\bACC\b/,
+      type: 'altocumulus-castellanus',
+      icon: null,
+      color: 'text-sky-400',
+      bgColor: 'bg-sky-500/20 border-sky-500/30',
+      decode: () => 'Altocumulus castellanus clouds'
+    },
+    {
+      pattern: /\bCCSL\b/,
+      type: 'cirrocumulus-lenticular',
+      icon: null,
+      color: 'text-sky-400',
+      bgColor: 'bg-sky-500/20 border-sky-500/30',
+      decode: () => 'Cirrocumulus standing lenticular clouds'
+    },
+    {
+      pattern: /\bCBMAM\b/,
+      type: 'cirrocumulus-mammatus',
+      icon: null,
+      color: 'text-sky-400',
+      bgColor: 'bg-sky-500/20 border-sky-500/30',
+      decode: () => 'Cumulonimbus mammatus clouds'
+    },
+    {
+      pattern: /\bSCSL\b/,
+      type: 'stratocumulus-lenticular',
+      icon: null,
+      color: 'text-sky-400',
+      bgColor: 'bg-sky-500/20 border-sky-500/30',
+      decode: () => 'Stratocumulus standing lenticular clouds'
+    },
+    {
       pattern: /\bBINOVC\b/,
       type: 'breaks-in-overcase',
       icon: null,
@@ -986,14 +1069,14 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
     },
 
     // *** Wind ***    
-    {
-      pattern: /\bWND\b/,
-      type: 'wind',
-      icon: null,
-      color: 'text-cyan-400',
-      bgColor: 'bg-cyan-500/20 border-cyan-500/30',
-      decode: () => 'Wind'
-    },
+    // {
+    //   pattern: /\bWND\b/,
+    //   type: 'wind',
+    //   icon: null,
+    //   color: 'text-cyan-400',
+    //   bgColor: 'bg-cyan-500/20 border-cyan-500/30',
+    //   decode: () => 'Wind'
+    // },
     {
       pattern: /\d{5}KT|\d{3}\d{2}G\d{2}KT|VRB\d{2}KT|VRB\d{2}G\d{2}KT/,
       type: 'wind',
@@ -1035,19 +1118,32 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
     {
       pattern: /\bPK WND\b/,
       type: 'peak',
-      icon: null,
-      color: 'text-cyan-400',
-      bgColor: 'bg-cyan-500/20 border-cyan-500/30',
+      icon: Wind,
+      color: 'text-green-400',
+      bgColor: 'bg-green-500/20 border-green-500/30',
       decode: () => 'Peak wind'
     },
     {
-      pattern: /\bPK\b/,
-      type: 'peak',
-      icon: null,
-      color: 'text-cyan-400',
-      bgColor: 'bg-cyan-500/20 border-cyan-500/30',
-      decode: () => 'Peak'
+      pattern: /WSHFT \d{4}/,
+      type: 'wind-shift',
+      icon: Wind,
+      color: 'text-green-400',
+      bgColor: 'bg-green-500/20 border-green-500/30',
+      decode: (match: string) => {
+        const timeStr = match.slice(6); // Get the 4 digits after "WSHFT "
+        const hour = timeStr.slice(0, 2);
+        const minute = timeStr.slice(2, 4);
+        return `Wind shift at ${hour}:${minute} UTC`;
+      }
     },
+    // {
+    //   pattern: /\bPK\b/,
+    //   type: 'peak',
+    //   icon: null,
+    //   color: 'text-cyan-400',
+    //   bgColor: 'bg-cyan-500/20 border-cyan-500/30',
+    //   decode: () => 'Peak'
+    // },
 
     // *** Movement & Proximity ***
     {
