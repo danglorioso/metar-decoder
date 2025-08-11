@@ -50,23 +50,28 @@ const ReportBugModal: React.FC<ReportBugModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[100vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex justify-between items-center px-6 py-4 border-b">
-          <h2 className="text-2xl font-bold text-gray-900">Report a Bug / Contact Us</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            <X className="w-6 h-6" />
-          </button>
+        <div className="px-6 py-4 border-b">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-bold text-gray-900">Report a Bug / Contact Us</h2>
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+          </div>
+          <p className="text-sm text-gray-600 mt-2">
+            <strong>Note:</strong> This application is currently tailored for US METAR formats and does not fully support international METAR variations yet.
+          </p>
         </div>
 
         {/* Content */}
         <div className="px-6 py-4">
           {isSubmitted ? (
             <div className="bg-green-100 text-green-800 border border-green-400 px-6 py-4 rounded">
-              Thank you for contacting us! Your message has been sent successfully.
+              Thank you! Your message has been sent successfully.
               <br />
               <span className="text-sm">This window will close automatically in a few seconds.</span>
             </div>
