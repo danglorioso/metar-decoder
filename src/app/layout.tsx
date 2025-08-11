@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import WebPDetector from "./components/WebPDetector";
 import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
@@ -40,21 +41,6 @@ export default function RootLayout({
           href="/aero-chart.webp"
           fetchPriority="high"
         />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                var webP = new Image();
-                webP.onload = webP.onerror = function () {
-                  if (webP.height == 2) {
-                    document.documentElement.classList.add('webp');
-                  }
-                };
-                webP.src = 'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
-              })();
-            `,
-          }}
-        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-gray-900 antialiased`}
@@ -74,6 +60,9 @@ export default function RootLayout({
       
         {/* Analytics */}
         <Analytics />
+        
+        {/* WebP Detection */}
+        <WebPDetector />
       </body>
     </html>
   );
