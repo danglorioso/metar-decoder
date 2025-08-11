@@ -159,6 +159,30 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
         return `6-hour minimum temperature: ${tempValue.toFixed(1)}°C`;
       }
     },
+    {
+      pattern: /4[01]\d{3}[01]\d{3}/,
+      type: '24hr-min-max-temp',
+      icon: Thermometer,
+      color: 'text-blue-400',
+      bgColor: 'bg-blue-500/20 border-blue-500/30',
+      decode: (match: string) => {
+        // Format: 4 + sign/temp digits for max + sign/temp digits for min
+        const maxTempBlock = match.slice(1, 5); // Positions 1-4: max temperature
+        const minTempBlock = match.slice(5, 9); // Positions 5-8: min temperature
+        
+        // Decode maximum temperature (first block)
+        const maxSign = maxTempBlock[0] === '0' ? 1 : -1;
+        const maxTempDigits = maxTempBlock.slice(1);
+        const maxTemp = (parseInt(maxTempDigits) / 10) * maxSign;
+        
+        // Decode minimum temperature (second block)
+        const minSign = minTempBlock[0] === '0' ? 1 : -1;
+        const minTempDigits = minTempBlock.slice(1);
+        const minTemp = (parseInt(minTempDigits) / 10) * minSign;
+        
+        return `24-hour temperature: Maximum ${maxTemp.toFixed(1)}°C, Minimum ${minTemp.toFixed(1)}°C`;
+      }
+    },
 
     // *** Percipitation Utility ***
     {
@@ -194,78 +218,90 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       }
     },
 
-    // *** Percipitation Types ***
+    // *** Percipitation Types ("Weather phenomena") ***
     {
-      pattern: /(?:^|(?<=\s))[-+]?RA(?=\s|$)/,
+      pattern: /(?:^|(?<=\s))(VC)?[-+]?RA(?=\s|$)/,
       type: 'rain',
       icon: Droplet,
       color: 'text-blue-400',
       bgColor: 'bg-blue-500/20 border-blue-500/30',
       decode: (match: string) => {
-        if (match.startsWith('-')) {
-          return 'Light rain';
-        } else if (match.startsWith('+')) {
-          return 'Heavy rain';
+        const isVicinity = match.startsWith('VC');
+        const rainPart = isVicinity ? match.slice(2) : match;
+        
+        let intensity = '';
+        if (rainPart.startsWith('-')) {
+          intensity = 'Light ';
+        } else if (rainPart.startsWith('+')) {
+          intensity = 'Heavy ';
         } else {
-          return 'Moderate rain';
+          intensity = 'Moderate ';
         }
+        
+        const vicinitySuffix = isVicinity ? ' in the vicinity ' : '';
+        return `${intensity}rain${vicinitySuffix}`;
       }
     },
     {
-      pattern: /(?:^|(?<=\s))[-+]?DZ(?=\s|$)/,
+      pattern: /(?:^|(?<=\s))(VC)?[-+]?DZ(?=\s|$)/,
       type: 'drizzle',
       icon: Droplet,
       color: 'text-blue-400',
       bgColor: 'bg-blue-500/20 border-blue-500/30',
       decode: (match: string) => {
-        if (match.startsWith('-')) {
-          return 'Light drizzle';
-        } else if (match.startsWith('+')) {
-          return 'Heavy drizzle';
+        const isVicinity = match.startsWith('VC');
+        const drizzlePart = isVicinity ? match.slice(2) : match;
+        
+        let intensity = '';
+        if (drizzlePart.startsWith('-')) {
+          intensity = 'Light ';
+        } else if (drizzlePart.startsWith('+')) {
+          intensity = 'Heavy ';
         } else {
-          return 'Moderate drizzle';
+          intensity = 'Moderate ';
+        }
+        
+        const vicinitySuffix = isVicinity ? ' in the vicinity ' : '';
+        return `${intensity}drizzle${vicinitySuffix}`;
+      }
+    },
+    {
+      pattern: /(?:^|(?<=\s))[-+]?GS(?=\s|$)/,
+      type: 'snow-pellets',
+      icon: CloudHail,
+      color: 'text-blue-400',
+      bgColor: 'bg-blue-500/20 border-blue-500/30',
+      decode: (match: string) => {
+        if (match.startsWith('-')) {
+          return 'Light snow pellets';
+        } else if (match.startsWith('+')) {
+          return 'Heavy snow pellets';
+        } else {
+          return 'Moderate snow pellets';
         }
       }
     },
-    // TODO: add this as a prefix for rain
     {
-      pattern: /\bSH\b/,
-      type: 'showers',
-      icon: CloudRainWind,
-      color: 'text-blue-400',
-      bgColor: 'bg-blue-500/20 border-blue-500/30',
-      decode: () => 'Showers'
-    },
-    {
-      pattern: /(?:^|(?<=\s))[-+]?SN(?=\s|$)/,
+      pattern: /(?:^|(?<=\s))(VC)?[-+]?SN(?=\s|$)/,
       type: 'snow',
       icon: Snowflake,
       color: 'text-blue-400',
       bgColor: 'bg-blue-500/20 border-blue-500/30',
       decode: (match: string) => {
-        if (match.startsWith('-')) {
-          return 'Light snow';
-        } else if (match.startsWith('+')) {
-          return 'Heavy snow';
+        const isVicinity = match.startsWith('VC');
+        const snowPart = isVicinity ? match.slice(2) : match;
+        
+        let intensity = '';
+        if (snowPart.startsWith('-')) {
+          intensity = 'Light ';
+        } else if (snowPart.startsWith('+')) {
+          intensity = 'Heavy ';
         } else {
-          return 'Moderate snow';
+          intensity = 'Moderate ';
         }
-      }
-    },
-    {
-      pattern: /(?:^|(?<=\s))[-+]?SG(?=\s|$)/,
-      type: 'snow-grain',
-      icon: Snowflake,
-      color: 'text-blue-400',
-      bgColor: 'bg-blue-500/20 border-blue-500/30',
-      decode: (match: string) => {
-        if (match.startsWith('-')) {
-          return 'Light snow grains';
-        } else if (match.startsWith('+')) {
-          return 'Heavy snow grains';
-        } else {
-          return 'Moderate snow grains';
-        }
+        
+        const vicinitySuffix = isVicinity ? ' in the vicinity ' : '';
+        return `${intensity}snow${vicinitySuffix}`;
       }
     },
     {
@@ -281,22 +317,6 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
           return 'Heavy ice crystals';
         } else {
           return 'Moderate ice crystals';
-        }
-      }
-    },
-    {
-      pattern: /(?:^|(?<=\s))[-+]?PL(?=\s|$)/,
-      type: 'ice-pellets',
-      icon: Snowflake,
-      color: 'text-blue-400',
-      bgColor: 'bg-blue-500/20 border-blue-500/30',
-      decode: (match: string) => {
-        if (match.startsWith('-')) {
-          return 'Light ice pellets';
-        } else if (match.startsWith('+')) {
-          return 'Heavy ice pellets';
-        } else {
-          return 'Moderate ice pellets';
         }
       }
     },
@@ -317,20 +337,60 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       }
     },
     {
-      pattern: /(?:^|(?<=\s))[-+]?GS(?=\s|$)/,
-      type: 'snow-pellets',
-      icon: CloudHail,
+      pattern: /(?:^|(?<=\s))[-+]?SG(?=\s|$)/,
+      type: 'snow-grain',
+      icon: Snowflake,
       color: 'text-blue-400',
       bgColor: 'bg-blue-500/20 border-blue-500/30',
       decode: (match: string) => {
         if (match.startsWith('-')) {
-          return 'Light snow pellets';
+          return 'Light snow grains';
         } else if (match.startsWith('+')) {
-          return 'Heavy snow pellets';
+          return 'Heavy snow grains';
         } else {
-          return 'Moderate snow pellets';
+          return 'Moderate snow grains';
         }
       }
+    },
+    {
+      pattern: /(?:^|(?<=\s))(VC)?[-+]?PL(?=\s|$)/,
+      type: 'ice-pellets',
+      icon: Snowflake,
+      color: 'text-blue-400',
+      bgColor: 'bg-blue-500/20 border-blue-500/30',
+      decode: (match: string) => {
+        const isVicinity = match.startsWith('VC');
+        const icePart = isVicinity ? match.slice(2) : match;
+        
+        let intensity = '';
+        if (icePart.startsWith('-')) {
+          intensity = 'Light ';
+        } else if (icePart.startsWith('+')) {
+          intensity = 'Heavy ';
+        } else {
+          intensity = 'Moderate ';
+        }
+        
+        const vicinitySuffix = isVicinity ? ' in the vicinity ' : '';
+        return `${intensity}ice pellets${vicinitySuffix}`;
+      }
+    },
+    {
+      pattern: /\bUP\b/,
+      type: 'unknown-perc',
+      icon: CloudRainWind,
+      color: 'text-blue-400',
+      bgColor: 'bg-blue-500/20 border-blue-500/30',
+      decode: () => 'Unknown percipitation'
+    },
+    // TODO: add this as a prefix for rain
+    {
+      pattern: /\bSH\b/,
+      type: 'showers',
+      icon: CloudRainWind,
+      color: 'text-blue-400',
+      bgColor: 'bg-blue-500/20 border-blue-500/30',
+      decode: () => 'Showers'
     },
 
     // *** Percipitation Rate ***
