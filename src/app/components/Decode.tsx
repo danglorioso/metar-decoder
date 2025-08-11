@@ -220,26 +220,47 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
 
     // *** Percipitation Types ("Weather phenomena") ***
     {
-      pattern: /(?:^|(?<=\s))(VC)?[-+]?RA(?=\s|$)/,
+      pattern: /(?:^|(?<=\s))(VC)?[-+]?(SH)?RA(?=\s|$)/,
       type: 'rain',
       icon: Droplet,
       color: 'text-blue-400',
       bgColor: 'bg-blue-500/20 border-blue-500/30',
       decode: (match: string) => {
-        const isVicinity = match.startsWith('VC');
-        const rainPart = isVicinity ? match.slice(2) : match;
+        let remainingMatch = match;
         
+        // Check for vicinity prefix
+        const isVicinity = remainingMatch.includes('VC');
+        if (isVicinity) {
+          remainingMatch = remainingMatch.replace('VC', '');
+        }
+        
+        // Check for intensity prefix (comes first)
         let intensity = '';
-        if (rainPart.startsWith('-')) {
+        if (remainingMatch.startsWith('-')) {
           intensity = 'Light ';
-        } else if (rainPart.startsWith('+')) {
+          remainingMatch = remainingMatch.slice(1); // Remove the - 
+        } else if (remainingMatch.startsWith('+')) {
           intensity = 'Heavy ';
+          remainingMatch = remainingMatch.slice(1); // Remove the +
         } else {
           intensity = 'Moderate ';
         }
         
-        const vicinitySuffix = isVicinity ? ' in the vicinity ' : '';
-        return `${intensity}rain${vicinitySuffix}`;
+        // Check for showers descriptor
+        const isShowers = remainingMatch.includes('SH');
+        
+        // Build the description
+        let description = `${intensity}rain`;
+        
+        if (isShowers) {
+          description += ' showers';
+        }
+        
+        if (isVicinity) {
+          description += ' in the vicinity';
+        }
+        
+        return description;
       }
     },
     {
@@ -602,29 +623,6 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
     },
 
     // *** Thunderstorm Events ***
-    //     {
-    //   pattern: /(?:^|(?<=\s))(VC)?[-+]?SS(?=\s|$)/,
-    //   type: 'sandstorm',
-    //   icon: Tornado,
-    //   color: 'text-blue-400',
-    //   bgColor: 'bg-blue-500/20 border-blue-500/30',
-    //   decode: (match: string) => {
-    //     const isVicinity = match.startsWith('VC');
-    //     const squallPart = isVicinity ? match.slice(2) : match;
-        
-    //     let intensity = '';
-    //     if (squallPart.startsWith('-')) {
-    //       intensity = 'Light ';
-    //     } else if (squallPart.startsWith('+')) {
-    //       intensity = 'Heavy ';
-    //     } else {
-    //       intensity = 'Moderate ';
-    //     }
-        
-    //     const vicinitySuffix = isVicinity ? ' in the vicinity ' : '';
-    //     return `${intensity}sandstorm${vicinitySuffix}`;
-    //   }
-    // },
     {
       pattern: /(?:^|(?<=\s))(VC)?[-+]?TS([-+]?RA)?(?=\s|$)/,
       type: 'thunderstorm',
