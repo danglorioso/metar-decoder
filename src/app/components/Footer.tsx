@@ -3,22 +3,44 @@ import React from 'react'
 
 export default function Footer() {
   return (
-    <footer className="text-neutral-400 text-center p-4 w-full bg-gray-950 border-t border-neutral-800">
-      <p className="mb-2 leading-tight">
-        © {new Date().getFullYear()} {" "}
-        <a
-          href="https://danglorioso.com"
-          target="_blank" // Open in new tab
-          rel="noopener noreferrer"
-          className="text-blue-500 hover:text-blue-700 transition-colors duration-300"
-        >
-          Dan Glorioso
-        </a>
-        .
-      </p>
-      <p className="text-sm text-neutral-500 leading-tight">
-        This website is not intended for operational use and should not be relied upon for flight planning or aviation decision-making.
-      </p>
+    <footer className="bg-gray-800/80 backdrop-blur border-t border-gray-600/50 mt-auto">
+      <div className="max-w-6xl mx-auto px-6 py-4">
+        <div className="flex flex-col items-center space-y-4">
+          {/* Main content */}
+          <div className="text-center">
+            <p className="text-gray-300 text-sm md:text-base mb-1">
+              Created by{" "}
+              <a
+                href="https://danglorioso.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-400 hover:text-blue-300 font-medium transition-colors duration-300 underline decoration-blue-400/30 hover:decoration-blue-300/60 underline-offset-2"
+              >
+                Dan Glorioso
+              </a>
+              .
+            </p>
+            <p className="text-gray-400 text-xs">
+              © {new Date().getFullYear()} All rights reserved
+            </p>
+          </div>
+
+          {/* Disclaimer */}
+          <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4 max-w-5xl">
+            <p className="text-amber-200/90 text-xs md:text-sm text-center leading-relaxed">
+              ⚠️ <span className="font-semibold">Disclaimer:</span> This website is not intended for operational use and should not be relied upon for flight planning or aviation decision-making.
+            </p>
+          </div>
+
+          {/* Divider */}
+          <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent"></div>
+          
+          {/* Additional info */}
+          <p className="text-gray-500 text-xs text-center">
+            METAR decoder for educational and informational purposes.
+          </p>
+        </div>
+      </div>
     </footer>
   );
 };
