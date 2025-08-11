@@ -22,7 +22,7 @@ export default function Display({ metarObject }: DisplayProps) {
     const metarPatterns = getMetarPatterns(airportsByIcao);
 
     const generateFullTranslation = () => {
-        const parts = metarText.split(/\s+/);
+        const parts = splitMetarText(metarText);
         interface DecodedMetarPart {
             explanation: string;
         }
@@ -63,6 +63,41 @@ export default function Display({ metarObject }: DisplayProps) {
         }
     }, [metarText, metarPatterns]);
 
+    // Custom function to split METAR text while preserving multi-word patterns
+    const splitMetarText = (text: string): string[] => {
+        // Define patterns that should not be split
+        const multiWordPatterns = [
+            /PK WND \d{3}\d{2}\/\d{4}/g,  // Peak wind with direction/speed and time
+            /WSHFT \d{4}/g,               // Wind shift with time
+            /PK WND/g,                    // Peak wind (standalone)
+        ];
+        
+        let workingText = text;
+        const preservedPhrases: string[] = [];
+        const placeholders: string[] = [];
+        
+        // Replace multi-word patterns with placeholders
+        multiWordPatterns.forEach((pattern, patternIndex) => {
+            let match;
+            while ((match = pattern.exec(workingText)) !== null) {
+                const placeholder = `__PLACEHOLDER_${patternIndex}_${preservedPhrases.length}__`;
+                preservedPhrases.push(match[0]);
+                placeholders.push(placeholder);
+                workingText = workingText.replace(match[0], placeholder);
+                pattern.lastIndex = 0; // Reset regex to avoid infinite loop
+            }
+        });
+        
+        // Split by spaces
+        const parts = workingText.split(/\s+/);
+        
+        // Replace placeholders back with original phrases
+        return parts.map(part => {
+            const placeholderIndex = placeholders.indexOf(part);
+            return placeholderIndex !== -1 ? preservedPhrases[placeholderIndex] : part;
+        });
+    };
+
     return (
         <div className="max-w-6xl mx-auto md:px-6">
             <div className="max-w-6xl p-4 md:p-6 space-y-4 bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl">
@@ -98,7 +133,7 @@ export default function Display({ metarObject }: DisplayProps) {
                 <div className="bg-gray-900/50 border border-gray-700 rounded-lg p-3 md:p-4 mb-6">
                     <div className="text-base md:text-lg leading-relaxed flex flex-wrap items-center gap-1">
                     {metarText &&
-                        metarText.split(/\s+/).map((word, index) => (
+                        splitMetarText(metarText).map((word, index) => (
                         <MetarWord
                             key={index}
                             word={word}
