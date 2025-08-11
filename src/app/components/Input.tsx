@@ -152,13 +152,20 @@ export default function MetarInput({ metarObject, setMetarObject }: InputProps) 
                             type="text"
                             value={icao}
                             onChange={(e) => {
-                                setICAO(e.target.value.toUpperCase());
+                                // Remove spaces from input
+                                const valueWithoutSpaces = e.target.value.replace(/\s/g, '');
+                                setICAO(valueWithoutSpaces.toUpperCase());
                                 // Reset fetch error when user changes input
                                 if (fetchError) {
                                     setFetchError('');
                                 }
                             }}
                             onKeyDown={(e) => {
+                                // Prevent space key
+                                if (e.key === ' ') {
+                                    e.preventDefault();
+                                    return;
+                                }
                                 if (e.key === 'Enter' && canFetch && !loading && !airportDataLoading) {
                                     fetchMetar();
                                 }
