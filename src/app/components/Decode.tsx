@@ -303,13 +303,14 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       }
     },
     {
-      pattern: /(?:^|(?<=\s))(VC)?[-+]?SN(?=\s|$)/,
+      pattern: /(?:^|(?<=\s))(VC)?[-+]?(BL)?SN(?=\s|$)/,
       type: 'snow',
       icon: Snowflake,
       color: 'text-blue-400',
       bgColor: 'bg-blue-500/20 border-blue-500/30',
       decode: (match: string) => {
         const isVicinity = match.startsWith('VC');
+        const isBlowing = match.includes('BL');
         const snowPart = isVicinity ? match.slice(2) : match;
         
         let intensity = '';
@@ -322,6 +323,11 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
         }
         
         const vicinitySuffix = isVicinity ? ' in the vicinity ' : '';
+        const blowingSuffix = isBlowing ? 'Blowing ' : '';
+        // If blowing, don't show intensity
+        if (isBlowing) {
+          return `${blowingSuffix}snow${vicinitySuffix}`;
+        }
         return `${intensity}snow${vicinitySuffix}`;
       }
     },
@@ -624,7 +630,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
 
     // *** Thunderstorm Events ***
     {
-      pattern: /(?:^|(?<=\s))(VC)?[-+]?TS([-+]?RA)?(?=\s|$)/,
+      pattern: /(?:^|(?<=\s))(VC)?[-+]?TS([-+]?RA)?(GR)?(?=\s|$)/,
       type: 'thunderstorm',
       icon: Zap,
       color: 'text-orange-400',
@@ -636,6 +642,12 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
         let thunderstormIntensity = '';
         let rainIntensity = '';
         let hasRain = false;
+        let hasHail = false;
+        
+        // Check for hail
+        if (thunderstormPart.includes('GR')) {
+          hasHail = true;
+        }
         
         // Check if there's rain and extract intensities
         if (thunderstormPart.includes('RA')) {
@@ -676,11 +688,24 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
         
         const vicinityPrefix = isVicinity ? ' in the vicinity ' : '';
         
-        if (hasRain) {
+        // Build description based on what's present
+        if (hasRain && hasHail) {
+          if (thunderstormIntensity) {
+            return `${thunderstormIntensity.charAt(0).toUpperCase() + thunderstormIntensity.slice(1)}thunderstorm with ${rainIntensity}rain and hail${vicinityPrefix}`;
+          } else {
+            return `Thunderstorm with ${rainIntensity}rain and hail${vicinityPrefix}`;
+          }
+        } else if (hasRain) {
           if (thunderstormIntensity) {
             return `${thunderstormIntensity.charAt(0).toUpperCase() + thunderstormIntensity.slice(1)}thunderstorm with ${rainIntensity}rain${vicinityPrefix}`;
           } else {
             return `Thunderstorm with ${rainIntensity}rain${vicinityPrefix}`;
+          }
+        } else if (hasHail) {
+          if (thunderstormIntensity) {
+            return `${thunderstormIntensity.charAt(0).toUpperCase() + thunderstormIntensity.slice(1)}thunderstorm with hail${vicinityPrefix}`;
+          } else {
+            return `Thunderstorm with hail${vicinityPrefix}`;
           }
         } else {
           if (thunderstormIntensity) {
@@ -697,7 +722,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       icon: Zap,
       color: 'text-orange-400',
       bgColor: 'bg-orange-500/20 border-orange-500/30',
-      decode: () => 'Vicinity thunderstorm'
+      decode: () => 'Thunderstorm in the vicinity'
     },
     {
       pattern: /TSB\d{2}/,
@@ -803,12 +828,20 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       decode: () => 'Mist'
     },
     {
-      pattern: /\bFG\b/,
+      pattern: /(?:^|(?<=\s))(BC)?FG(?=\s|$)/,
       type: 'fog',
       icon: null,
       color: 'text-slate-400',
       bgColor: 'bg-slate-500/20 border-slate-500/30',
-      decode: () => 'Fog'
+      decode: (match: string) => {
+        const isPatchy = match.includes('BC');
+
+        if (isPatchy) {
+          return 'Patchy fog'
+        } else {
+          return 'Fog'
+        }
+      }
     },
 
     // *** Direction ***
