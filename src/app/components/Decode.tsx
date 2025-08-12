@@ -1075,6 +1075,22 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       bgColor: 'bg-sky-500/20 border-sky-500/30',
       decode: () => 'Sky conditions at secondary location not available'
     },
+    {
+      pattern: /\bBKN\b/,
+      type: 'broken',
+      icon: null,
+      color: 'text-sky-400',
+      bgColor: 'bg-sky-500/20 border-sky-500/30',
+      decode: () => 'Broken clouds'
+    },
+    {
+      pattern: /\bSCT\b/,
+      type: 'scattered',
+      icon: null,
+      color: 'text-sky-400',
+      bgColor: 'bg-sky-500/20 border-sky-500/30',
+      decode: () => 'Scattered clouds'
+    },
 
     // *** Wind ***
     {
@@ -1171,14 +1187,14 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
         return `Wind shift at ${hour}:${minute} UTC`;
       }
     },
-    // {
-    //   pattern: /\bPK\b/,
-    //   type: 'peak',
-    //   icon: null,
-    //   color: 'text-cyan-400',
-    //   bgColor: 'bg-cyan-500/20 border-cyan-500/30',
-    //   decode: () => 'Peak'
-    // },
+    {
+      pattern: /\bPK\b/,
+      type: 'peak',
+      icon: null,
+      color: 'text-cyan-400',
+      bgColor: 'bg-cyan-500/20 border-cyan-500/30',
+      decode: () => 'Peak'
+    },
 
     // *** Movement & Proximity ***
     {
@@ -1236,6 +1252,14 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       color: 'text-orange-400',
       bgColor: 'bg-orange-500/20 border-orange-500/30',
       decode: () => 'Distant'
+    },
+    {
+      pattern: /\bV\b/,
+      type: 'variable',
+      icon: null,
+      color: 'text-orange-400',
+      bgColor: 'bg-orange-500/20 border-orange-500/30',
+      decode: () => 'Variable'
     },
     {
       pattern: /\bOHD\b/,
@@ -1380,13 +1404,21 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
         return `Visibility: ${vis} statute miles`;
       }
     },
-    // {
-    //   pattern: /\bAND\b/,
-    //   type: 'and',
-    //   icon: null,
-    //   color: 'text-gray-400',
-    //   bgColor: 'bg-gray-500/20 border-gray-500/30',
-    //   decode: () => 'And'
-    // },
+    {
+      pattern: /\bAND\b/,
+      type: 'and',
+      icon: null,
+      color: 'text-gray-400',
+      bgColor: 'bg-gray-500/20 border-gray-500/30',
+      decode: () => 'And'
+    },
+    {
+      pattern: /\bTHRU\b/,
+      type: 'thru',
+      icon: null,
+      color: 'text-gray-400',
+      bgColor: 'bg-gray-500/20 border-gray-500/30',
+      decode: () => 'Through'
+    },
   ];
 };
