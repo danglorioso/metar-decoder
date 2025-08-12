@@ -109,6 +109,14 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       decode: () => 'Correction to a previously disseminated observation'
     },
     {
+      pattern: /\bLAST\b/,
+      type: 'last',
+      icon: CircleAlert,
+      color: 'text-red-400',
+      bgColor: 'bg-red-500/20 border-red-500/30',
+      decode: () => 'Last observation before a break in coverage'
+    },
+    {
       pattern: /\bRWY\d{2}[LCR]?\b/,
       type: 'runway',
       icon: PlaneLanding,
@@ -1068,15 +1076,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       decode: () => 'Sky conditions at secondary location not available'
     },
 
-    // *** Wind ***    
-    // {
-    //   pattern: /\bWND\b/,
-    //   type: 'wind',
-    //   icon: null,
-    //   color: 'text-cyan-400',
-    //   bgColor: 'bg-cyan-500/20 border-cyan-500/30',
-    //   decode: () => 'Wind'
-    // },
+    // *** Wind ***
     {
       pattern: /\d{5}KT|\d{3}\d{2}G\d{2}KT|VRB\d{2}KT|VRB\d{2}G\d{2}KT/,
       type: 'wind',
@@ -1116,12 +1116,47 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       }
     },
     {
+      pattern: /PK WND \d{3}\d{2}\/\d{2,4}/,
+      type: 'peak-wind-full',
+      icon: Wind,
+      color: 'text-green-400',
+      bgColor: 'bg-green-500/20 border-green-500/30',
+      decode: (match: string) => {
+        // Format: PK WND DDDSS/TT or PK WND DDDSS/TTTT
+        const parts = match.split(' ');
+        const windAndTime = parts[2]; // Get "DDDSS/TT" part
+        const [windPart, timePart] = windAndTime.split('/');
+        
+        const direction = windPart.slice(0, 3);
+        const speed = windPart.slice(3, 5);
+        
+        let timeStr = '';
+        if (timePart.length === 2) {
+          timeStr = `${timePart} minutes past the hour`;
+        } else if (timePart.length === 4) {
+          const hour = timePart.slice(0, 2);
+          const minute = timePart.slice(2, 4);
+          timeStr = `${hour}:${minute} UTC`;
+        }
+        
+        return `Peak wind from ${direction}° at ${speed} knots, occurred ${timeStr}`;
+      }
+    },
+    {
       pattern: /\bPK WND\b/,
       type: 'peak',
       icon: Wind,
       color: 'text-green-400',
       bgColor: 'bg-green-500/20 border-green-500/30',
       decode: () => 'Peak wind'
+    },
+    {
+      pattern: /\bWND\b/,
+      type: 'wind',
+      icon: null,
+      color: 'text-cyan-400',
+      bgColor: 'bg-cyan-500/20 border-cyan-500/30',
+      decode: () => 'Wind'
     },
     {
       pattern: /WSHFT \d{4}/,
@@ -1146,6 +1181,14 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
     // },
 
     // *** Movement & Proximity ***
+    {
+      pattern: /\bMOV LTL\b/,
+      type: 'moving-little',
+      icon: null,
+      color: 'text-emerald-400',
+      bgColor: 'bg-emerald-500/20 border-emerald-500/30',
+      decode: () => 'Moving little'
+    },
     {
       pattern: /\bMOV\b/,
       type: 'moving',
