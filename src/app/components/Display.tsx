@@ -3,9 +3,10 @@
 import { useState, useEffect } from 'react';
 import { MetarWord } from './Word';
 import { getMetarPatterns } from './Decode';
-import { Copy, Eye } from 'lucide-react';
+import { Copy, Eye, Info } from 'lucide-react';
 import { useAirportData } from '../hooks/useAirportData';
 import { MetarArray } from '../types/MetarArray';
+import Tooltip from './Tooltip';
 
 type DisplayProps = {
     metarObject: MetarArray | null;
@@ -31,9 +32,13 @@ export default function Display({ metarObject }: DisplayProps) {
             for (let pattern of metarPatterns) {
                 const match = part.match(pattern.pattern);
                 if (match) {
-                    return {
-                        explanation: pattern.decode(match[0]) ?? '',
-                    };
+                    const explanation = pattern.decode(match[0]);
+                    // Only return if explanation is not null/undefined and not empty
+                    if (explanation) {
+                        return {
+                            explanation: explanation,
+                        };
+                    }
                 }
             }
             return null;
@@ -43,7 +48,7 @@ export default function Display({ metarObject }: DisplayProps) {
         
         parts.forEach(part => {
         const decoded = decodeMetarPart(part);
-        if (decoded) {
+        if (decoded && decoded.explanation.trim()) {
             translation.push(decoded.explanation);
         } else {
             // If no decode available, use the actual word
@@ -67,9 +72,10 @@ export default function Display({ metarObject }: DisplayProps) {
     const splitMetarText = (text: string): string[] => {
         // Define patterns that should not be split
         const multiWordPatterns = [
-            /PK WND \d{3}\d{2}\/\d{4}/g,  // Peak wind with direction/speed and time
+            /PK WND \d{3}\d{2}\/\d{2,4}/g, // Peak wind with full data
             /WSHFT \d{4}/g,               // Wind shift with time
             /PK WND/g,                    // Peak wind (standalone)
+            /MOV LTL/g,                   // Moving little
         ];
         
         let workingText = text;
@@ -96,9 +102,7 @@ export default function Display({ metarObject }: DisplayProps) {
             const placeholderIndex = placeholders.indexOf(part);
             return placeholderIndex !== -1 ? preservedPhrases[placeholderIndex] : part;
         });
-    };
-
-    return (
+    };    return (
         <div className="max-w-6xl mx-auto md:px-6">
             <div className="max-w-6xl p-4 md:p-6 space-y-4 bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl">
                 {/* Header */}
@@ -107,6 +111,9 @@ export default function Display({ metarObject }: DisplayProps) {
                         <h2 className="text-xl md:text-2xl font-semibold text-white flex items-center gap-3">
                             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                             Latest METAR Report
+                            <Tooltip text="Weather data sourced from aviationweather.gov - National Weather Service">
+                                <Info className="w-4 h-4 text-gray-400 hover:text-blue-400 transition-colors cursor-help" />
+                            </Tooltip>
                         </h2>
                         <div className="text-gray-400 text-sm mt-1">
                             <span className="font-semibold">Last updated:</span> {metarObject ? new Date(metarObject.reportTime).toLocaleString() + ' UTC' : 'No METAR data available'}
