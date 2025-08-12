@@ -145,7 +145,7 @@ export default function MetarInput({ metarObject, setMetarObject }: InputProps) 
                         <label className="block text-sm font-semibold text-gray-300 mb-3">
                         Airport Code (ICAO)
                         </label>
-                        <div className="flex gap-3">
+                        <div className="flex flex-col sm:flex-row gap-3">
 
                         {/* ICAO Input */}
                         <input
@@ -179,7 +179,7 @@ export default function MetarInput({ metarObject, setMetarObject }: InputProps) 
                         <button
                             onClick={fetchMetar}
                             disabled={loading || airportDataLoading || !canFetch}
-                            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg transition-colors duration-200 flex items-center gap-2"
+                            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 w-full sm:w-auto"
                         >
                             {(loading || airportDataLoading) ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
                             {airportDataLoading ? 'Loading...' : 'Fetch'}
