@@ -72,10 +72,12 @@ export default function Display({ metarObject }: DisplayProps) {
     const splitMetarText = (text: string): string[] => {
         // Define patterns that should not be split
         const multiWordPatterns = [
-            /PK WND \d{3}\d{2}\/\d{2,4}/g, // Peak wind with full data
-            /WSHFT \d{4}/g,               // Wind shift with time
-            /PK WND/g,                    // Peak wind (standalone)
-            /MOV LTL/g,                   // Moving little
+            /\bPK WND \d{3}\d{2}\/\d{2,4}\b/g, // Peak wind with full data
+            /\bWSHFT \d{4}\b/g,               // Wind shift with time (exactly 4 digits)
+            /\bPK WND\b/g,                    // Peak wind (standalone)
+            /\bMOV LTL\b/g,                   // Moving little
+            /\bCIG \d{3} (N|NE|E|SE|S|SW|W|NW)\b/g,  // Ceiling, altitude, direction (more specific first)
+            /\bCIG \d{3}\b/g,                 // Ceiling and altitude (more general second)
         ];
         
         let workingText = text;
@@ -84,14 +86,21 @@ export default function Display({ metarObject }: DisplayProps) {
         
         // Replace multi-word patterns with placeholders
         multiWordPatterns.forEach((pattern, patternIndex) => {
-            let match;
-            while ((match = pattern.exec(workingText)) !== null) {
-                const placeholder = `__PLACEHOLDER_${patternIndex}_${preservedPhrases.length}__`;
-                preservedPhrases.push(match[0]);
-                placeholders.push(placeholder);
-                workingText = workingText.replace(match[0], placeholder);
-                pattern.lastIndex = 0; // Reset regex to avoid infinite loop
-            }
+            const matches = [...workingText.matchAll(pattern)];
+            
+            // Process matches in reverse order to avoid index shifting issues
+            matches.reverse().forEach((match) => {
+                if (match.index !== undefined) {
+                    const placeholder = `__PLACEHOLDER_${patternIndex}_${preservedPhrases.length}__`;
+                    preservedPhrases.push(match[0]);
+                    placeholders.push(placeholder);
+                    
+                    // Replace the specific match at its exact position
+                    workingText = workingText.slice(0, match.index) + 
+                                 placeholder + 
+                                 workingText.slice(match.index + match[0].length);
+                }
+            });
         });
         
         // Split by spaces

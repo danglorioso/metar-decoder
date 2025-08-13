@@ -17,7 +17,8 @@ import {
   CircleGauge,
   Tornado,
   CloudAlert,
-  PlaneLanding
+  PlaneLanding,
+  Cloud,
 } from 'lucide-react';
 
 import { validateIcaoCode } from '@/app/hooks/useAirportData';
@@ -594,7 +595,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
     {
       pattern: /P\d{4}/,
       type: 'percip-rate',
-      icon: null,
+      icon: Droplet,
       color: 'text-lime-400',
       bgColor: 'bg-lime-500/20 border-lime-500/30',
       decode: (match: string) => {
@@ -913,7 +914,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
 
     // *** Direction ***
     {
-      pattern: /\b(N|NE|E|SE|S|SW|W|NW)(-(?:N|NE|E|SE|S|SW|W|NW))?\b/,
+      pattern: /(?<!CIG \d{3} )\b(N|NE|E|SE|S|SW|W|NW)(-(?:N|NE|E|SE|S|SW|W|NW))?\b/,
       type: 'direction',
       icon: null,
       color: 'text-rose-400',
@@ -1002,6 +1003,53 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       color: 'text-sky-400',
       bgColor: 'bg-sky-500/20 border-sky-500/30',
       decode: () => 'Cumulonimbus clouds'
+    },
+    {
+      pattern: /\bCIG \d{3} (N|NE|E|SE|S|SW|W|NW)\b/,
+      type: 'ceiling-alt-dir',
+      icon: Cloud,
+      color: 'text-sky-400',
+      bgColor: 'bg-sky-500/20 border-sky-500/30',
+      decode: (match: string) => {
+        const parts = match.split(' ');
+        const alt = parts[1]; // Get the 3-digit altitude
+        const dir = parts[2]; // Get the direction
+        const altitude = parseInt(alt) * 100;
+        
+        const directionMap: Record<string, string> = {
+          'N': 'North',
+          'NE': 'Northeast',
+          'E': 'East',
+          'SE': 'Southeast',
+          'S': 'South',
+          'SW': 'Southwest',
+          'W': 'West',
+          'NW': 'Northwest'
+        };
+        
+        const directionName = directionMap[dir] || dir;
+        return `Ceiling at ${altitude.toLocaleString()} feet to the ${directionName}`;
+      }
+    },
+    {
+      pattern: /\bCIG \d{3}\b/,
+      type: 'ceiling-alt',
+      icon: Cloud,
+      color: 'text-sky-400',
+      bgColor: 'bg-sky-500/20 border-sky-500/30',
+      decode: (match: string) => {
+        const alt = match.slice(4, 7);
+        const altitude = parseInt(alt) * 100;
+        return `Ceiling at ${altitude.toLocaleString()} feet`;
+      }
+    },
+    {
+      pattern: /\bCIG\b/,
+      type: 'ceiling',
+      icon: Cloud,
+      color: 'text-sky-400',
+      bgColor: 'bg-sky-500/20 border-sky-500/30',
+      decode: () => 'Ceiling'
     },
     {
       pattern: /\bTCU\b/,
@@ -1376,14 +1424,6 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       color: 'text-lime-400',
       bgColor: 'bg-lime-500/20 border-lime-500/30',
       decode: () => 'Light'
-    },
-    {
-      pattern: /\bCIG\b/,
-      type: 'ceiling',
-      icon: null,
-      color: 'text-sky-400',
-      bgColor: 'bg-sky-500/20 border-sky-500/30',
-      decode: () => 'Ceiling'
     },
     {
       pattern: /\bMTNS\b/,
