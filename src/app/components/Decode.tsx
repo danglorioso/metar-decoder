@@ -1,24 +1,25 @@
 import {
-  Plane,
-  Wind,
-  Eye,
-  CloudSnow,
-  Thermometer,
-  Gauge,
-  Clock,
-  CloudRainWind,
-  Waves,
+  Bubbles,
   CircleAlert,
-  NotebookPen,
-  Droplet,
-  Snowflake,
-  Zap,
-  CloudHail,
   CircleGauge,
-  Tornado,
-  CloudAlert,
-  PlaneLanding,
   Cloud,
+  CloudAlert,
+  CloudHail,
+  CloudRainWind,
+  CloudSnow,
+  Clock,
+  Droplet,
+  Eye,
+  Gauge,
+  NotebookPen,
+  Plane,
+  PlaneLanding,
+  Snowflake,
+  Thermometer,
+  Tornado,
+  Waves,
+  Wind,
+  Zap
 } from 'lucide-react';
 
 import { validateIcaoCode } from '@/app/hooks/useAirportData';
@@ -571,6 +572,22 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
         const vicinitySuffix = isVicinity ? ' in the vicinity ' : '';
         return `${intensity}funnel clouds${vicinitySuffix}`;
       }
+    },
+    {
+      pattern: /\bVIRGA\b/,
+      type: 'virga',
+      icon: Bubbles,
+      color: 'text-blue-400',
+      bgColor: 'bg-blue-500/20 border-blue-500/30',
+      decode: () => 'Precipitation evaporating before reaching the ground'
+    },
+    {
+      pattern: /\bDU\b/,
+      type: 'widespread-dust',
+      icon: Tornado,
+      color: 'text-blue-400',
+      bgColor: 'bg-blue-500/20 border-blue-500/30',
+      decode: () => 'Widespread dust'
     },
     {
       pattern: /\bUP\b/,
