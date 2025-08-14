@@ -2,7 +2,7 @@ import React from 'react';
 
 type SpeechBubbleTooltipProps = {
   children: React.ReactNode;
-  text: string;
+  text: string | React.ReactNode;
 };
 
 export default function SpeechBubbleTooltip({ children, text }: SpeechBubbleTooltipProps) {

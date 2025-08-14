@@ -120,7 +120,20 @@ export default function Display({ metarObject }: DisplayProps) {
                         <h2 className="text-xl md:text-2xl font-semibold text-white flex items-center gap-3">
                             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                             Latest METAR Report
-                            <Tooltip text="Weather data sourced from aviationweather.gov - National Weather Service">
+                            <Tooltip text={
+                                <span>
+                                    Weather data sourced from the NOAA National Weather Service –{" "}
+                                    <a 
+                                        href="https://aviationweather.gov" 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="text-blue-400 hover:text-blue-300 underline"
+                                    >
+                                        Aviation Weather Center
+                                    </a>
+                                    .
+                                </span>
+                            }>
                                 <Info className="w-4 h-4 text-gray-400 hover:text-blue-400 transition-colors cursor-help" />
                             </Tooltip>
                         </h2>
