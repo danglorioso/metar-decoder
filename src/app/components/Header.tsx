@@ -1,4 +1,6 @@
 import { Plane } from 'lucide-react';
+import Favicon from '../../../public/favicon.ico'
+import Image from 'next/image'
 
 export default function Header() {
     return (
@@ -7,7 +9,8 @@ export default function Header() {
                 <div className="text-center">
                 <div className="flex items-center justify-center gap-3 mb-2">
                     <div className="p-2 bg-blue-500/20 rounded-lg border border-blue-500/30">
-                    <Plane className="w-8 h-8 text-blue-400" />
+                        {/* <Plane className="w-8 h-8 text-blue-400" /> */}
+                        <Image src={Favicon} alt="Favicon" width={32} height={32} />
                     </div>
                     <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-blue-400 bg-clip-text text-transparent">
                         METAR Decoder
