@@ -73,11 +73,11 @@ export default function Display({ metarObject }: DisplayProps) {
         // Define patterns that should not be split
         const multiWordPatterns = [
             /\bPK WND \d{3}\d{2}\/\d{2,4}\b/g, // Peak wind with full data
-            /\bWSHFT \d{4}\b/g,               // Wind shift with time (exactly 4 digits)
-            /\bPK WND\b/g,                    // Peak wind (standalone)
-            /\bMOV LTL\b/g,                   // Moving little
+            /\bWSHFT [012][0-4][0-5]\d\b/g,    // Wind shift with time (HH:MM format validation)
+            /\bPK WND\b/g,                     // Peak wind (standalone)
+            /\bMOV LTL\b/g,                    // Moving little
             /\bCIG \d{3} (N|NE|E|SE|S|SW|W|NW)\b/g,  // Ceiling, altitude, direction (more specific first)
-            /\bCIG \d{3}\b/g,                 // Ceiling and altitude (more general second)
+            /\bCIG \d{3}\b/g,                  // Ceiling and altitude (more general second)
         ];
         
         let workingText = text;
