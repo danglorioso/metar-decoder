@@ -143,7 +143,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
 
     // *** Temperature ***
     {
-      pattern: /\d{2}\/\d{2}|\d{2}\/M\d{2}|M\d{2}\/\d{2}|M\d{2}\/M\d{2}/,
+      pattern: /\b\d{2}\/\d{2}\b|\b\d{2}\/M\d{2}\b|\bM\d{2}\/\d{2}\b|\bM\d{2}\/M\d{2}\b/,
       type: 'temperature',
       icon: Thermometer,
       color: 'text-red-400',
