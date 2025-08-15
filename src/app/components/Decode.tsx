@@ -8,6 +8,7 @@ import {
   CloudRainWind,
   CloudSnow,
   Clock,
+  Compass,
   Droplet,
   Eye,
   Gauge,
@@ -955,7 +956,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
     {
       pattern: /(?<!CIG \d{3} )\b(N|NE|E|SE|S|SW|W|NW)(-(?:N|NE|E|SE|S|SW|W|NW))?\b/,
       type: 'direction',
-      icon: null,
+      icon: Compass,
       color: 'text-rose-400',
       bgColor: 'bg-rose-500/20 border-rose-500/30',
       decode: (match: string) => {
