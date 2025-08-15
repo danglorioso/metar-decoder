@@ -13,7 +13,7 @@ export default function Home() {
   const [isReportBugOpen, setIsReportBugOpen] = useState(false);
   
   return (
-    <div className="px-8 mx-auto min-w-screen bg-gray-900 bg-aero-chart bg-fixed bg-center bg-no-repeat bg-blend-overlay" style={{ backgroundSize: '100% auto' }}>
+    <div className="px-8 mx-auto min-w-screen bg-gray-900 bg-aero-chart bg-fixed bg-center bg-no-repeat bg-blend-overlay">
       {/* Fixed Report Bug Button */}
       <button
         onClick={() => setIsReportBugOpen(true)}
