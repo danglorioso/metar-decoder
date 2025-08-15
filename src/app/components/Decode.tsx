@@ -114,7 +114,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       pattern: /\bLAST\b/,
       type: 'last',
       icon: CircleAlert,
-      color: 'text-red-400',
+      color: 'text-orange-400',
       bgColor: 'bg-red-500/20 border-red-500/30',
       decode: () => 'Last observation before a break in coverage'
     },
@@ -600,12 +600,27 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
 
     // TODO: add this as a prefix for rain
     {
-      pattern: /\bSH\b/,
+      pattern: /(?:^|(?<=\s))(VC)?[-+]?SH(?=\s|$)/,
       type: 'showers',
       icon: CloudRainWind,
       color: 'text-blue-400',
       bgColor: 'bg-blue-500/20 border-blue-500/30',
-      decode: () => 'Showers'
+      decode: (match: string) => {
+        const isVicinity = match.startsWith('VC');
+        const squallPart = isVicinity ? match.slice(2) : match;
+        
+        let intensity = '';
+        if (squallPart.startsWith('-')) {
+          intensity = 'Light ';
+        } else if (squallPart.startsWith('+')) {
+          intensity = 'Heavy ';
+        } else {
+          intensity = 'Moderate ';
+        }
+        
+        const vicinitySuffix = isVicinity ? ' in the vicinity ' : '';
+        return `${intensity}shower${vicinitySuffix}`;
+      }
     },
 
     // *** Percipitation Rate ***
@@ -964,7 +979,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       icon: null,
       color: 'text-rose-400',
       bgColor: 'bg-rose-500/20 border-rose-500/30',
-      decode: () => 'All quadrants'
+      decode: () => 'In all quadrants'
     },
     {
       pattern: /OBSC[GNEWSAL]+/,
@@ -1317,6 +1332,14 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       color: 'text-orange-400',
       bgColor: 'bg-orange-500/20 border-orange-500/30',
       decode: () => 'Distant'
+    },
+    {
+      pattern: /\bDSIPTD\b/,
+      type: 'dissipated',
+      icon: null,
+      color: 'text-orange-400',
+      bgColor: 'bg-orange-500/20 border-orange-500/30',
+      decode: () => 'Dissipated'
     },
     {
       pattern: /\bV\b/,
