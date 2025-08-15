@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { MetarWord } from './Word';
 import { getMetarPatterns } from './Decode';
-import { Copy, Eye, Info, Check } from 'lucide-react';
+import { Copy, Eye, Info, MousePointer, Check } from 'lucide-react';
 import { useAirportData } from '../hooks/useAirportData';
 import { MetarArray } from '../types/MetarArray';
 import Tooltip from './Tooltip';
@@ -204,7 +204,8 @@ export default function Display({ metarObject }: DisplayProps) {
 
                 {/* Tooltip legend */}
                 <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
-                    <div className="w-4 h-4 bg-blue-500/20 border border-blue-500/30 rounded"></div>
+                    {/* <div className="w-4 h-4 bg-blue-500/20 border border-blue-500/30 rounded"></div> */}
+                    <MousePointer className="w-4 h-4" />
                     {/* Different text depending on device (desktop, then mobile) */}
                     <span className="hidden lg:inline">Hover over highlighted words for detailed explanations</span> 
                     <span className="inline lg:hidden">Tap on highlighted words for detailed explanations</span>
