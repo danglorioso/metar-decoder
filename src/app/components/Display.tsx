@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { MetarWord } from './Word';
 import { getMetarPatterns } from './Decode';
-import { Copy, Eye, Info } from 'lucide-react';
+import { Copy, Eye, Info, Check } from 'lucide-react';
 import { useAirportData } from '../hooks/useAirportData';
 import { MetarArray } from '../types/MetarArray';
 import Tooltip from './Tooltip';
@@ -16,11 +16,34 @@ export default function Display({ metarObject }: DisplayProps) {
     // useStates
     const [showFullTranslation, setShowFullTranslation] = useState(false);
     const [fullTranslation, setFullTranslation] = useState('');
+    const [copiedRaw, setCopiedRaw] = useState(false);
+    const [copiedTranslation, setCopiedTranslation] = useState(false);
     const metarText = metarObject ? metarObject.rawOb : '';
     
     // Load airport data
     const { airportsByIcao } = useAirportData();
     const metarPatterns = getMetarPatterns(airportsByIcao);
+
+    // Copy handlers
+    const handleCopyRaw = async () => {
+        try {
+            await navigator.clipboard.writeText(metarText);
+            setCopiedRaw(true);
+            setTimeout(() => setCopiedRaw(false), 2000);
+        } catch (err) {
+            console.error('Failed to copy raw text:', err);
+        }
+    };
+
+    const handleCopyTranslation = async () => {
+        try {
+            await navigator.clipboard.writeText(fullTranslation);
+            setCopiedTranslation(true);
+            setTimeout(() => setCopiedTranslation(false), 2000);
+        } catch (err) {
+            console.error('Failed to copy translation:', err);
+        }
+    };
 
     const generateFullTranslation = () => {
         const parts = splitMetarText(metarText);
@@ -143,11 +166,17 @@ export default function Display({ metarObject }: DisplayProps) {
                     </div>
                     <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                     <button
-                        onClick={() => navigator.clipboard.writeText(metarText)}
+                        onClick={handleCopyRaw}
                         className="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 border border-gray-600 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 text-gray-300"
                     >
-                        <Copy className="w-4 h-4" />
-                        Copy raw
+                        <div className="transition-all duration-300 ease-in-out">
+                            {copiedRaw ? (
+                                <Check className="w-4 h-4 text-green-400 animate-in fade-in zoom-in duration-300" />
+                            ) : (
+                                <Copy className="w-4 h-4 animate-in fade-in zoom-in duration-300" />
+                            )}
+                        </div>
+                        {copiedRaw ? 'Copied!' : 'Copy raw'}
                     </button>
                     <button
                         onClick={() => setShowFullTranslation(!showFullTranslation)}
@@ -182,7 +211,11 @@ export default function Display({ metarObject }: DisplayProps) {
                 </div>
 
                 {/* Optional Translation */}
-                {showFullTranslation && (
+                <div className={`transition-all duration-500 ease-in-out overflow-hidden ${
+                    showFullTranslation 
+                        ? 'max-h-screen opacity-100 transform translate-y-0' 
+                        : 'max-h-0 opacity-0 transform -translate-y-4'
+                }`}>
                     <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 md:p-6">
                     <h3 className="font-semibold text-blue-400 mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                         <div className="flex items-center gap-2">
@@ -192,11 +225,17 @@ export default function Display({ metarObject }: DisplayProps) {
                         
                         {/* Copy button */}
                         <button
-                            onClick={() => navigator.clipboard.writeText(fullTranslation)}
+                            onClick={handleCopyTranslation}
                             className="px-4 py-2 text-sm font-normal bg-gray-700 hover:bg-gray-600 border border-gray-600 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 text-gray-300 self-start sm:self-auto"
                         >
-                            <Copy className="w-4 h-4" />
-                            Copy translation
+                            <div className="transition-all duration-300 ease-in-out">
+                                {copiedTranslation ? (
+                                    <Check className="w-4 h-4 text-green-400 animate-in fade-in zoom-in duration-300" />
+                                ) : (
+                                    <Copy className="w-4 h-4 animate-in fade-in zoom-in duration-300" />
+                                )}
+                            </div>
+                            {copiedTranslation ? 'Copied!' : 'Copy translation'}
                         </button>
                     </h3>
                     <p className="text-gray-300 leading-relaxed text-sm md:text-lg">
@@ -204,7 +243,7 @@ export default function Display({ metarObject }: DisplayProps) {
                     </p>
                     
                     </div>
-                )}
+                </div>
             </div>
         </div>
     );
