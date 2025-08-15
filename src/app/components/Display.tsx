@@ -189,7 +189,11 @@ export default function Display({ metarObject }: DisplayProps) {
 
                 {/* METAR Display */}
                 <div className="bg-gray-900/50 border border-gray-700 rounded-lg p-3 md:p-4 mb-6">
-                    <div className="text-base md:text-lg leading-relaxed flex flex-wrap items-center gap-1">
+                    <div className={`text-base md:text-lg leading-relaxed flex flex-wrap items-center gap-1 transition-all duration-500 ease-in-out overflow-hidden ${
+                        metarText 
+                            ? 'max-h-screen opacity-100 transform translate-y-0' 
+                            : 'max-h-8 opacity-0 transform -translate-y-4'
+                    }`}>
                     {metarText &&
                         splitMetarText(metarText).map((word, index) => (
                         <MetarWord
