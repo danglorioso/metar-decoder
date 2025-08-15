@@ -848,7 +848,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
     },
 
     // *** Lightning *** 
-        {
+    {
       pattern: /\bFRQ\b/,
       type: 'frq-lightning',
       icon: null,
@@ -856,7 +856,14 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       bgColor: 'bg-orange-500/20 border-orange-500/30',
       decode: () => 'Frequent'
     },
-    
+    {
+      pattern: /\bMDT\b/,
+      type: 'moderate',
+      icon: null,
+      color: 'text-orange-400',
+      bgColor: 'bg-orange-500/20 border-orange-500/30',
+      decode: () => 'Moderate'
+    },
     {
       pattern: /\bLTG\b|LTG(CG|CC|IC)+\b/,
       type: 'lightning',
@@ -1031,10 +1038,18 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
     {
       pattern: /\bCB\b/,
       type: 'cumulonimbus',
-      icon: null,
+      icon: Cloud,
       color: 'text-sky-400',
       bgColor: 'bg-sky-500/20 border-sky-500/30',
       decode: () => 'Cumulonimbus clouds'
+    },
+    {
+      pattern: /\bCU\b/,
+      type: 'cumulus',
+      icon: Cloud,
+      color: 'text-sky-400',
+      bgColor: 'bg-sky-500/20 border-sky-500/30',
+      decode: () => 'Cumulus clouds'
     },
     {
       pattern: /\bCIG \d{3} (N|NE|E|SE|S|SW|W|NW)\b/,
@@ -1086,7 +1101,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
     {
       pattern: /\bTCU\b/,
       type: 'towering-cumulus',
-      icon: null,
+      icon: Cloud,
       color: 'text-sky-400',
       bgColor: 'bg-sky-500/20 border-sky-500/30',
       decode: () => 'Towering cumulus clouds'
@@ -1094,7 +1109,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
     {
       pattern: /\bACSL\b/,
       type: 'altocumulus',
-      icon: null,
+      icon: Cloud,
       color: 'text-sky-400',
       bgColor: 'bg-sky-500/20 border-sky-500/30',
       decode: () => 'Altocumulus standing lenticular clouds'
@@ -1102,7 +1117,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
     {
       pattern: /\bACC\b/,
       type: 'altocumulus-castellanus',
-      icon: null,
+      icon: Cloud,
       color: 'text-sky-400',
       bgColor: 'bg-sky-500/20 border-sky-500/30',
       decode: () => 'Altocumulus castellanus clouds'
@@ -1110,7 +1125,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
     {
       pattern: /\bCCSL\b/,
       type: 'cirrocumulus-lenticular',
-      icon: null,
+      icon: Cloud,
       color: 'text-sky-400',
       bgColor: 'bg-sky-500/20 border-sky-500/30',
       decode: () => 'Cirrocumulus standing lenticular clouds'
@@ -1118,7 +1133,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
     {
       pattern: /\bCBMAM\b/,
       type: 'cirrocumulus-mammatus',
-      icon: null,
+      icon: Cloud,
       color: 'text-sky-400',
       bgColor: 'bg-sky-500/20 border-sky-500/30',
       decode: () => 'Cumulonimbus mammatus clouds'
@@ -1126,7 +1141,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
     {
       pattern: /\bSCSL\b/,
       type: 'stratocumulus-lenticular',
-      icon: null,
+      icon: Cloud,
       color: 'text-sky-400',
       bgColor: 'bg-sky-500/20 border-sky-500/30',
       decode: () => 'Stratocumulus standing lenticular clouds'
@@ -1166,7 +1181,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
     {
       pattern: /\bSCT\b/,
       type: 'scattered',
-      icon: null,
+      icon: Cloud,
       color: 'text-sky-400',
       bgColor: 'bg-sky-500/20 border-sky-500/30',
       decode: () => 'Scattered clouds'
