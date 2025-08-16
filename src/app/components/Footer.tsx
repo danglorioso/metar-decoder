@@ -34,14 +34,6 @@ export default function Footer() {
               ⚠️ <span className="font-semibold">Disclaimer:</span> This website is not intended for operational use and should not be relied upon for flight planning or aviation decision-making.
             </p>
           </div>
-
-          {/* Divider */}
-          {/* <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent"></div> */}
-          
-          {/* Additional info */}
-          {/* <p className="text-gray-500 text-xs text-center">
-            METAR decoder for educational and informational purposes.
-          </p> */}
         </div>
       </div>
     </footer>
