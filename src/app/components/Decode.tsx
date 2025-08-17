@@ -626,7 +626,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
 
     // *** Percipitation Rate ***
     {
-      pattern: /P\d{4}/,
+      pattern: /\bP\d{4}\b/,
       type: 'percip-rate',
       icon: Droplet,
       color: 'text-lime-400',
@@ -1251,7 +1251,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
           timeStr = `${hour}:${minute} UTC`;
         }
         
-        return `Peak wind from ${direction}° at ${speed} knots, occurred ${timeStr}`;
+        return `Peak wind from ${direction}° at ${speed} knots, occurring at ${timeStr}`;
       }
     },
     {
@@ -1499,6 +1499,14 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
         const vis = match.replace('SM', '');
         return `Visibility: ${vis} statute miles`;
       }
+    },
+    {
+      pattern: /\bVIS\b/,
+      type: 'vis',
+      icon: Eye,
+      color: 'text-yellow-400',
+      bgColor: 'bg-yellow-500/20 border-yellow-500/30',
+      decode: () => `Visibility`
     },
     {
       pattern: /\bAND\b/,
