@@ -653,6 +653,22 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
 
     // *** Percipitation Timing ***
     {
+      pattern: /RAB\d{2}E\d{2}/,
+      type: 'rain-begin-end',
+      icon: CloudRainWind,
+      color: 'text-blue-400',
+      bgColor: 'bg-blue-500/20 border-blue-500/30',
+      decode: (match: string) => {
+        const beginMinutes = parseInt(match.slice(3, 5));
+        const endMinutes = parseInt(match.slice(6, 8));
+        
+        const beginText = beginMinutes === 1 ? '1 minute' : `${beginMinutes} minutes`;
+        const endText = endMinutes === 1 ? '1 minute' : `${endMinutes} minutes`;
+        
+        return `Rain began ${beginText} after the hour and ended ${endText} after the hour`;
+      }
+    },
+    {
       pattern: /RAB\d{2}/,
       type: 'rain-begin',
       icon: CloudRainWind,
