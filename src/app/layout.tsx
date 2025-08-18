@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Roboto } from "next/font/google";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Header";
@@ -17,7 +17,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ 
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
 
 export const metadata: Metadata = {
   title: "METAR Decode",
@@ -43,7 +46,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} bg-gray-900 antialiased`}
+        className={`${inter.variable} ${geistMono.variable} font-inter bg-gray-900 antialiased`}
       >
         {/* Header */}
         <div className="flex-shrink-0">
