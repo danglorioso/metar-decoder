@@ -1509,6 +1509,33 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       decode: () => `Visibility`
     },
     {
+      pattern: /R\d{2}[LRC]\/\d{4}VP\d{4}FT/,
+      type: 'runway-visibility',
+      icon: Eye,
+      color: 'text-yellow-400',
+      bgColor: 'bg-yellow-500/20 border-yellow-500/30',
+      decode: (match: string) => {
+        const [runway, vis] = match.split('/');
+
+        const runwayNum = runway.slice(1, 3);
+        const dir = match.slice(3, 4); // Get the L/C/R character
+        
+        let dirName = '';
+        if (dir === 'L') {
+          dirName = ' Left';
+        } else if (dir === 'C') {
+          dirName = ' Center';
+        } else if (dir === 'R') {
+          dirName = ' Right';
+        }
+
+        const minDist = vis.slice(0, 4);
+        const maxDist = vis.slice(6, 10);
+
+        return `Runway ${runwayNum}${dirName}: ${minDist}-${maxDist}ft visibility`;
+      }
+    },
+    {
       pattern: /\bAND\b/,
       type: 'and',
       icon: null,
