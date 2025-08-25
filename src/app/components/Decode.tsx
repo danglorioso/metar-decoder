@@ -967,6 +967,14 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       bgColor: 'bg-red-500/20 border-red-500/30',
       decode: () => 'Volcanic ash'
     },
+    {
+      pattern: /\bVISNO\b/,
+      type: 'thunderstorm-no',
+      icon: null,
+      color: 'text-amber-400',
+      bgColor: 'bg-amber-500/20 border-amber-500/30',
+      decode: () => 'Visibility at secondary location not available'
+    },
 
     // *** Direction ***
     {
