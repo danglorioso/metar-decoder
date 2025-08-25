@@ -1431,7 +1431,7 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
     {
       pattern: /5(\d)(\d{3})/,
       type: 'pressure',
-      icon: null,
+      icon: Gauge,
       color: 'text-slate-400',
       bgColor: 'bg-slate-500/20 border-slate-500/30',
       decode: (match: string) => {
