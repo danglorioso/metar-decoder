@@ -1490,6 +1490,14 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
 
     // *** Other ***
     {
+      pattern: /\bMETAR\b/,
+      type: 'metar',
+      icon: null,
+      color: 'text-gray-400',
+      bgColor: 'bg-gray-500/20 border-gray-500/30',
+      decode: () => 'METAR'
+    },
+    {
       pattern: /\bBNK\b/,
       type: 'bank',
       icon: null,
