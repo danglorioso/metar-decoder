@@ -141,8 +141,12 @@ export default function Display({ metarObject }: DisplayProps) {
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                     <div>
                         <h2 className="text-xl md:text-2xl font-semibold text-white flex items-center gap-3">
-                            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                            Latest METAR Report
+                            
+                            {/* Dot icon */}
+                            {metarObject ? <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div> : <div className="w-2 h-2 bg-amber-400 rounded-full"></div>}
+
+                            {/* Title */}
+                            {metarObject ? 'Latest METAR Report for ' + metarObject.icaoId : 'Latest METAR Report'}
                             <Tooltip text={
                                 <span>
                                     Weather data sourced from the NOAA National Weather Service –{" "}
