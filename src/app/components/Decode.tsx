@@ -1583,5 +1583,13 @@ export const getMetarPatterns = (airportsByIcao?: Map<string, Airport>) => {
       bgColor: 'bg-gray-500/20 border-gray-500/30',
       decode: () => 'Through'
     },
+    {
+      pattern: /\bSPECI\b/,
+      type: 'special',
+      icon: CircleAlert,
+      color: 'text-orange-100',
+      bgColor: 'bg-amber-500/20 border-orange-200/30',
+      decode: () => 'Special report'
+    }
   ];
 };
