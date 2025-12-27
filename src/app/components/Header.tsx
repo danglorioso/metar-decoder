@@ -17,6 +17,7 @@ export default function Header() {
                     </h1>
                 </div>
                 {/* <p className="text-gray-400 text-md">Decode aviation weather reports with interactive hover translations.</p> */}
+                <p className="text-gray-400 text-md">Translate Meteorological Aerodrome Reports into human-readable text.</p>
                 </div>
             </div>
         </div>
