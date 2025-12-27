@@ -165,7 +165,7 @@ export default function Display({ metarObject }: DisplayProps) {
                             </Tooltip>
                         </h2>
                         <div className="text-gray-400 text-sm mt-1">
-                            <span className="font-semibold">Last updated:</span> {metarObject ? new Date(metarObject.reportTime).toLocaleString() + ' UTC' : 'No METAR data available'}
+                            <span className="font-semibold">Last updated:</span> {metarObject ? new Date(metarObject.reportTime).toLocaleString('en-US', { timeZone: 'UTC' }) + ' UTC' : 'No METAR data available'}
                         </div>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
