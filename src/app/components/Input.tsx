@@ -243,46 +243,38 @@ export default function MetarInput({ metarObject, setMetarObject }: InputProps) 
 
     return (
         <div className="max-w-6xl mx-auto md:px-6 py-6">
-            <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl p-6">
-                <div className="flex flex-col lg:flex-row gap-6">
-                    {/* Mode Selection */}
-                    <div className="">
-                        <label className="block text-sm font-semibold text-gray-300 mb-3">
-                            Input Mode
-                        </label>
-                        <div className="flex flex-col sm:flex-row gap-2">
-                            <button
-                                onClick={() => setCustomMode(false)}
-                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                                    !customMode 
-                                    ? 'bg-blue-600 text-white border border-blue-500' 
-                                    : 'bg-gray-700 text-gray-300 border border-gray-600 hover:bg-gray-600'
-                                }`}
-                                >
-                                <div className="flex items-center justify-center gap-2">
-                                    <Search className="w-4 h-4" />
-                                    Airport Lookup
-                                </div>
-                            </button>
-                            <button
-                                onClick={() => setCustomMode(true)}
-                                className={`px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                                    customMode 
-                                    ? 'bg-blue-600 text-white border border-blue-500' 
-                                    : 'bg-gray-700 text-gray-300 border border-gray-600 hover:bg-gray-600'
-                                }`}
-                                >
-                                <div className="flex items-center justify-center gap-2">
-                                    <Copy className="w-4 h-4" />
-                                    Custom METAR
-                                </div>
-                            </button>
-                        </div>
-                    </div>
+            <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl overflow-hidden">
+                {/* Tab Navigation */}
+                <div className="flex border-b border-gray-700">
+                    <button
+                        onClick={() => setCustomMode(false)}
+                        className={`flex-1 px-4 py-3 text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
+                            !customMode 
+                            ? 'bg-blue-600/20 text-white border-b-2 border-blue-500' 
+                            : 'text-gray-300 hover:text-white hover:bg-gray-700/50'
+                        }`}
+                    >
+                        <Search className="w-4 h-4" />
+                        Airport Lookup
+                    </button>
+                    <button
+                        onClick={() => setCustomMode(true)}
+                        className={`flex-1 px-4 py-3 text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
+                            customMode 
+                            ? 'bg-blue-600/20 text-white border-b-2 border-blue-500' 
+                            : 'text-gray-300 hover:text-white hover:bg-gray-700/50'
+                        }`}
+                    >
+                        <Copy className="w-4 h-4" />
+                        Custom METAR
+                    </button>
+                </div>
 
+                {/* Tab Content */}
+                <div className="p-6">
                     {/* Airport Input */}
                     {!customMode && (
-                    <div className="flex-1">
+                    <div>
                         <label className="block text-sm font-semibold text-gray-300 mb-3">
                         Airport Search (ICAO, Name, or City)
                         </label>
@@ -425,25 +417,25 @@ export default function MetarInput({ metarObject, setMetarObject }: InputProps) 
                         )}
                     </div>
                     )}
-                </div>
 
-                {/* Custom METAR Input */}
-                {customMode && (
-                    <div className="mt-6">
-                    <label className="block text-sm font-medium text-gray-300 mb-3">
-                        Enter METAR Text
-                    </label>
-                    <div className="flex gap-3">
-                        <textarea
-                            value={metarText}
-                            onChange={(e) => handleCustomMetar(e.target.value.toUpperCase())}
-                            className="flex-1 px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-gray-400 font-mono"
-                            rows={3}
-                            placeholder="Paste your METAR report here..."
-                        />
-                    </div>
-                    </div>
-                )}
+                    {/* Custom METAR Input */}
+                    {customMode && (
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-300 mb-3">
+                                Enter METAR Text
+                            </label>
+                            <div className="flex gap-3">
+                                <textarea
+                                    value={metarText}
+                                    onChange={(e) => handleCustomMetar(e.target.value.toUpperCase())}
+                                    className="flex-1 px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-gray-400 font-mono"
+                                    rows={3}
+                                    placeholder="Paste your METAR report here..."
+                                />
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );
