@@ -54,7 +54,7 @@ const ReportBugModal: React.FC<ReportBugModalProps> = ({ isOpen, onClose }) => {
         {/* Header */}
         <div className="px-6 py-4 border-b">
           <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold text-gray-900">Report a Bug / Contact Us</h2>
+            <h2 className="text-2xl font-bold text-gray-900">Report a Bug / Contact Dan</h2>
             <button
               onClick={onClose}
               className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -63,7 +63,7 @@ const ReportBugModal: React.FC<ReportBugModalProps> = ({ isOpen, onClose }) => {
             </button>
           </div>
           <p className="text-sm text-gray-600 mt-2">
-            <strong>Note:</strong> This application is currently tailored for US METAR formats and does not fully support international METAR variations yet.
+            <strong>Note:</strong> This application is designed for U.S. METAR formats and does not yet provide full compatibility with international METAR variations.
           </p>
         </div>
 
